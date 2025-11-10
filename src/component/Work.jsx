@@ -33,7 +33,7 @@ const projects = [
     description:
       "A modern e-commerce website with React, featuring fast performance, dynamic UI, and responsive design.",
     image: "/e1.png",
-    link: "http://localhost:5173/",
+    link: "https://online-shop-txm5.vercel.app/",
     technologies: [
       "#HTML, ",
       "CSS, ",
