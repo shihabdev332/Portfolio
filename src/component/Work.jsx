@@ -3,17 +3,9 @@ import React from "react";
 import { useInView } from "react-intersection-observer";
 
 const projects = [
+
   {
     id: 1,
-    title: "Construction Website",
-    description:
-      "A modern and responsive website for a construction company, showcasing services, projects, and contact information.",
-    image: "/1.png",
-    link: "https://construction-website-rose-two.vercel.app/",
-    technologies: ["#React, ", "MUi, ", "framer-motion, ", "Tailwind CSS"],
-  },
-  {
-    id: 2,
     title: "Agency Website",
     description:
       "A modern and responsive website for a construction company, showcasing services, projects, and contact information.",
@@ -28,7 +20,7 @@ const projects = [
     ],
   },
   {
-    id: 3,
+    id: 2,
     title: "E-commerce Website",
     description:
       "A modern e-commerce website with React, featuring fast performance, dynamic UI, and responsive design.",
@@ -43,7 +35,7 @@ const projects = [
     ],
   },
     {
-    id: 4,
+    id: 3,
     title: "E-commerce Website",
     description:
       "A fully responsive e-commerce website with modern UI, dynamic features, and seamless user experience.",
@@ -52,7 +44,7 @@ const projects = [
     technologies: ["#React, ", "Tailwind Css, ",  "Express.Js,", "Mongoose"],
   },
     {
-    id: 5,
+    id: 4,
     title: "Admin Panel",
     description:
       "A fully responsive e-commerce Admin Panel with modern UI, dynamic features, and seamless Admin experience.",
