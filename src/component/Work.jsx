@@ -33,7 +33,7 @@ const projects = [
     description:
       "A modern e-commerce website with React, featuring fast performance, dynamic UI, and responsive design.",
     image: "/e1.png",
-    link: "https://project1-cyan-one.vercel.app/",
+    link: "http://localhost:5173/",
     technologies: [
       "#HTML, ",
       "CSS, ",
