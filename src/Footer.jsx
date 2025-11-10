@@ -62,7 +62,7 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4">Follow Me</h3>
             <div className="flex space-x-4">
               <a
-                href="#"
+                  href="https://github.com/shihabdev332?tab=repositories"
                 className="text-gray-400 hover:text-white"
               >
                 <FaGithub size={30} />
