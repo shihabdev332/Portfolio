@@ -37,7 +37,7 @@ const Hero = () => {
           transition={{ delay: 0.3, duration: 0.7 }}
           className="text-4xl text-[#ce83e3] md:text-5xl flex flex-col gap-4 font-bold "
         >
-          Hello, This is Shihab. <br />
+          Hello,I'm Shihab. <br />
           <motion.span
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
