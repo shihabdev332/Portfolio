@@ -63,6 +63,8 @@ const Footer = () => {
             <div className="flex space-x-4">
               <a
                   href="https://github.com/shihabdev332?tab=repositories"
+                 target="_blank" 
+                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white"
               >
                 <FaGithub size={30} />
