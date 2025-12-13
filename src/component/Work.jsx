@@ -40,7 +40,7 @@ const projects = [
     description:
       "A fully responsive e-commerce website with modern UI, dynamic features, and seamless user experience.",
     image: "/client.png",
-    link: "https://digital-shop-front-end-yk7p.vercel.app/",
+    link: "https://digital-shop-front-end-7hqg.vercel.app/",
     technologies: ["#React, ", "Tailwind Css, ",  "Express.Js,", "Mongoose"],
   },
     {
