@@ -108,7 +108,7 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="absolute font-semibold mt-[-200px] text-white text-lg px-4 py-1 rounded"
+              className="absolute font-semibold mt-[-100px] text-white text-lg px-4 py-1 rounded"
               style={{
                 textShadow: "0 0 8px #ff00ff, 0 0 12px #ff00ff",
               }}
