@@ -82,7 +82,7 @@ const Hero = () => {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* Jelly-like Rotating Ring */}
+        {/*Rotating Ring */}
         <motion.div
           animate={controls}
           className={`absolute inset-0 rounded-full p-[1px] 
@@ -121,7 +121,7 @@ const Hero = () => {
 
       {/* Hero Animated Heading */}
       <div className="container mx-auto text-center mt-10">
-        <h1 className="text-4xl md:text-5xl font-bold flex justify-center">
+        <h1 className="text-3xl md:text-5xl font-bold flex justify-center">
           <span
             style={{ color: typingTexts[currentText].color }}
             className="mr-1"
