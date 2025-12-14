@@ -6,7 +6,9 @@ const skills = [
   { name: "HTML", level: 90 },
   { name: "CSS", level: 85 },
   { name: "JavaScript", level: 80 },
+  { name: "TypeScript", level: 50 },
   { name: "React", level: 85 },
+  { name: "Next.js", level: 50 },
   { name: "Tailwind CSS", level: 80 },
   { name: "Node.js", level: 70 },
   { name: "Express.js", level: 70 },
@@ -14,7 +16,7 @@ const skills = [
   { name: "Mongoose", level: 65 },
   { name: "Material UI", level: 75 },
   { name: "Framer Motion", level: 70 },
-  { name: "Three.js", level: 50 },
+  
 ];
 
 // Parent variants (section load + stagger children)
