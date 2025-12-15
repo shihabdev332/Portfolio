@@ -114,7 +114,7 @@ const WorkCard = ({ project }) => {
 
           <div className="flex justify-center gap-5">
              <button
-              onClick={() => window.open(project.code, "_blank")}
+              onClick={() => window.open(project.link, "_blank")}
               className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-full text-white transition cursor-pointer flex gap-1 font-bold"
             >
                Visit Website<FaExternalLinkAlt  className="text-sm mt-1.5 text-black"/>
