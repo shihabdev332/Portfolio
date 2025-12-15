@@ -1,152 +1,179 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import React from "react";
 import { useInView } from "react-intersection-observer";
+import { FaExternalLinkAlt } from "react-icons/fa";
+
 
 const projects = [
-
   {
     id: 1,
     title: "Agency Website",
     description:
-      "A modern and responsive website for a construction company, showcasing services, projects, and contact information.",
+      "A modern and responsive website for a construction company, showcasing services and projects.",
     image: "/2.png",
     link: "https://agency-weld-kappa.vercel.app/",
-    technologies: [
-      "#HTML, ",
-      "CSS, ",
-      "JavaScript, ",
-      "React, ",
-      "Tailwind CSS",
-    ],
+    code:"https://github.com/shihabdev332/Agency",
+    technologies: ["HTML", "CSS", "JavaScript", "React", "Tailwind"],
   },
   {
     id: 2,
     title: "E-commerce Website",
     description:
-      "A modern e-commerce website with React, featuring fast performance, dynamic UI, and responsive design.",
+      "A modern e-commerce website with fast performance and dynamic UI.",
     image: "/e1.png",
     link: "https://online-shop-txm5.vercel.app/",
-    technologies: [
-      "#HTML, ",
-      "CSS, ",
-      "JavaScript, ",
-      "React, ",
-      "Tailwind CSS",
-    ],
+    code:"https://github.com/shihabdev332/online-Shop",
+    technologies: ["React", "Tailwind", "JavaScript"],
   },
-    {
+  {
     id: 3,
     title: "E-commerce Website",
     description:
-      "A fully responsive e-commerce website with modern UI, dynamic features, and seamless user experience.",
+      "A fully responsive e-commerce website with seamless user experience.",
     image: "/client.png",
-    link: "https://digital-shop-front-end-7hqg.vercel.app/",
-    technologies: ["#React, ", "Tailwind Css, ",  "Express.Js,", "Mongoose"],
+    link: "https://digital-shop-front-end-ebkb.vercel.app/",
+    code:"https://github.com/shihabdev332/Digital-Shop-Front-end",
+    technologies: ["React", "Tailwind", "Express", "MongoDB"],
   },
-    {
+  {
     id: 4,
     title: "Admin Panel",
-    description:
-      "A fully responsive e-commerce Admin Panel with modern UI, dynamic features, and seamless Admin experience.",
+    description: "A modern admin panel with full control and clean UI.",
     image: "/admin.png",
     link: "https://digital-shop-admin-panel-6x1n.vercel.app/",
-    technologies: ["#React, ", "Tailwind CSS, ", "Mongoose,", "Express"],
+    code:"https://github.com/shihabdev332/Digital-shop-admin-panel",
+    technologies: ["React", "Tailwind", "Express", "MongoDB"],
   },
-
 ];
 
-const Work = () => {
-  // Header animation
-  const [headerRef, headerInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-    rootMargin: "-50px 0px",
-  });
+const WorkCard = ({ project }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  // Description animation
-  const [descRef, descInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-    rootMargin: "-50px 0px",
-  });
+  const rotateX = useTransform(y, [-60, 60], [12, -12]);
+  const rotateY = useTransform(x, [-60, 60], [-12, 12]);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    x.set(e.clientX - rect.left - rect.width / 2);
+    y.set(e.clientY - rect.top - rect.height / 2);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
-    <div id="work" className="py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.h2
-          ref={headerRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-4xl text-white underline font-bold text-center mb-12"
-        >
-          My Work
-        </motion.h2>
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY }}
+      whileHover={{ scale: 1.06 }}
+      transition={{ type: "spring", stiffness: 220, damping: 18 }}
+      className="relative rounded-xl perspective-[1200px]"
+    >
+      {/* Animated Gradient Border */}
+      <motion.div
+        animate={{
+          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className="absolute inset-[-2px] rounded-xl
+        bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400
+        bg-[length:300%_300%] blur-sm opacity-80"
+      />
 
-        {/* Description */}
-        <motion.p
-          ref={descRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={descInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-12 text-gray-400 text-center"
-        >
-          A collection of my latest projects showcasing my skills in web development and UI/UX design.
-        </motion.p>
+      {/* Card */}
+      <motion.div
+        whileHover={{
+          boxShadow: "0 0 45px rgba(168,85,247,0.9)",
+        }}
+        className="relative z-10 bg-gray-900 rounded-xl overflow-hidden"
+      >
+        <img
+          src={project.image}
+          alt={project.title}
+          className="w-full h-52 object-cover"
+        />
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          {projects.map((project) => {
-            
-            const [projectRef, projectInView] = useInView({
-              triggerOnce: false, 
-              threshold: 0.1,
-              rootMargin: "-50px 0px",
-            });
+        <div className="p-6">
+          <h3 className="text-xl text-white font-semibold mb-2">
+            {project.title}
+          </h3>
 
-            return (
-              <motion.div
-                ref={projectRef}
-                key={project.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={projectInView ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.3,
-                  delay: project.id * 0.1,
-                  ease: "easeInOut",
-                }}
-                className="bg-gray-900 shadow shadow-purple-300 rounded-lg overflow-hidden"
-              >
-                <img 
-                  src={project.image} 
-                  alt={project.title}
-                  className="w-full h-auto sm:h-52 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl text-white font-semibold mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-slate-400 mb-4">{project.description}</p>
-                  <h4 className="text-[20px] text-purple-500 mb-4">
-                    {project.technologies}
-                  </h4>
-                  <div className="flex justify-center">
-                    <button
-                      onClick={() => window.open(project.link, "_blank")}
-                      className="text-white bg-purple-400 hover:bg-purple-700 px-6 py-3 rounded-full transition duration-300 cursor-pointer"
-                      aria-label={`Visit ${project.title} website`}
-                    >
-                      Visit Website
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+          <p className="text-gray-400 mb-3">{project.description}</p>
+
+          <p className="text-purple-400 text-sm mb-4">
+            {project.technologies.join(", ")}
+          </p>
+
+          <div className="flex justify-center gap-5">
+             <button
+              onClick={() => window.open(project.code, "_blank")}
+              className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-full text-white transition cursor-pointer flex gap-1 font-bold"
+            >
+               Visit Website<FaExternalLinkAlt  className="text-sm mt-1.5 text-black"/>
+            </button>
+              <button
+              onClick={() => window.open(project.code, "_blank")}
+              className="bg-green-600 hover:bg-green-800 px-6 py-2 rounded-full text-white transition cursor-pointer flex gap-1 font-bold"
+            >
+               Source Code<FaExternalLinkAlt  className="text-sm mt-1.5 text-black"/>
+            </button>
+          </div>
         </div>
+      </motion.div>
+
+      {/* 🔥 Smooth Top Hover Text */}
+      <motion.div
+        initial={{ opacity: 0, y: -15 }}
+        whileHover={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className="absolute top-4 left-0 right-0 z-20
+        text-center text-blue-500 text-xl font-bold pointer-events-none"
+      >
+        Code with Shihab
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const Work = () => {
+  const [headerRef, headerInView] = useInView({ triggerOnce: true });
+  const [descRef, descInView] = useInView({ triggerOnce: true });
+
+  return (
+    <section id="work" className="py-20">
+      <motion.h2
+        ref={headerRef}
+        initial={{ opacity: 0, y: 20 }}
+        animate={headerInView ? { opacity: 1, y: 0 } : {}}
+        className="text-4xl text-white font-bold underline text-center mb-6"
+      >
+        My Work
+      </motion.h2>
+
+      <motion.p
+        ref={descRef}
+        initial={{ opacity: 0, y: 20 }}
+        animate={descInView ? { opacity: 1, y: 0 } : {}}
+        className="text-gray-400 text-center mb-12"
+      >
+        A collection of my latest projects showcasing modern UI and smooth
+        interactions.
+      </motion.p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 max-w-7xl mx-auto px-4">
+        {projects.map((project) => (
+          <WorkCard key={project.id} project={project} />
+        ))}
       </div>
-    </div>
+    </section>
   );
 };
 
