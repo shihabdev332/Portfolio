@@ -162,7 +162,7 @@ const Work = () => {
         ref={descRef}
         initial={{ opacity: 0, y: 20 }}
         animate={descInView ? { opacity: 1, y: 0 } : {}}
-        className="text-gray-400 text-center mb-12"
+        className="text-blue-500 text-sm text-center mb-12"
       >
         A collection of my latest projects showcasing modern UI and smooth
         interactions.
