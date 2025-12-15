@@ -155,14 +155,14 @@ const Work = () => {
         animate={headerInView ? { opacity: 1, y: 0 } : {}}
         className="text-4xl text-white font-bold underline text-center mb-6"
       >
-        My Work
+        My Work Section
       </motion.h2>
 
       <motion.p
         ref={descRef}
         initial={{ opacity: 0, y: 20 }}
         animate={descInView ? { opacity: 1, y: 0 } : {}}
-        className="text-blue-500 text-sm text-center mb-12"
+        className="text-blue-500 text-xl font-semibold text-center mb-12"
       >
         A collection of my latest projects showcasing modern UI and smooth
         interactions.
