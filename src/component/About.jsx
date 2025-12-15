@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 const About = () => {
@@ -8,26 +8,25 @@ const About = () => {
     threshold: 0.2,
   });
 
-  // Optional: Animated counting numbers
+  // Animated counting numbers for stats
   const [experience, setExperience] = useState(0);
   const [customers, setCustomers] = useState(0);
   const [projects, setProjects] = useState(0);
 
-  useEffect(() => {
-    if (inView) {
-      let exp = 0,
-        cus = 0,
-        pro = 0;
-      const interval = setInterval(() => {
-        if (exp < 2) setExperience((prev) => prev + 0.1);
-        if (cus < 50) setCustomers((prev) => prev + 1);
-        if (pro < 50) setProjects((prev) => prev + 1);
-      }, 30);
-      setTimeout(() => clearInterval(interval), 1600);
-    }
-  }, [inView]);
+useEffect(() => {
+  if (inView) {
+    const interval = setInterval(() => {
+      setExperience(prev => Math.min(prev + 0.05, 2.7)); // stop at 2.7
+      setCustomers(prev => Math.min(prev + 1, 50));
+      setProjects(prev => Math.min(prev + 1, 50));
+    }, 30);
 
-  // Variants
+    setTimeout(() => clearInterval(interval), 2000); // slightly longer to reach 2.7 smoothly
+  }
+}, [inView]);
+
+
+  // Animation variants
   const fadeUp = { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } } };
   const fadeLeft = { hidden: { opacity: 0, x: -60 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } } };
   const fadeRight = { hidden: { opacity: 0, x: 60 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } } };
@@ -39,18 +38,18 @@ const About = () => {
   ];
 
   return (
-    <section ref={ref} id="about" className="min-h-screen py-20 px-6 sm:px-12 relative overflow-hidden">
-      {/* Background subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-purple-800/10 pointer-events-none -z-10"></div>
+    <section
+      id="about"
+      ref={ref}
+      className="min-h-screen py-20 px-6 sm:px-12 relative overflow-hidden"
+      style={{ backgroundColor: "#0F0F13" }} 
+    >
+      {/* Subtle gradient overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-purple-800/5 to-transparent pointer-events-none -z-10"></div>
 
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* Image Section */}
-        <motion.div
-          variants={fadeLeft}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="flex justify-center lg:justify-start relative"
-        >
+        <motion.div variants={fadeLeft} initial="hidden" animate={inView ? "visible" : "hidden"} className="flex justify-center lg:justify-start relative">
           {/* Glow Ring */}
           <div className="absolute w-44 h-44 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-2xl bg-gradient-to-br from-purple-500/30 to-transparent blur-2xl -z-10 animate-pulse"></div>
           <motion.img
@@ -61,13 +60,7 @@ const About = () => {
         </motion.div>
 
         {/* Text Section */}
-        <motion.div
-          variants={fadeRight}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          transition={{ delay: 0.2 }}
-          className="text-center lg:text-left"
-        >
+        <motion.div variants={fadeRight} initial="hidden" animate={inView ? "visible" : "hidden"} transition={{ delay: 0.2 }} className="text-center lg:text-left">
           <motion.h2
             className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600 mb-6 underline underline-offset-4"
             initial={{ opacity: 0, y: 20 }}
