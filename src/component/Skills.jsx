@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 const skills = [
-  { name: "HTML", level: 90 },
+ { name: "HTML", level: 90 },
   { name: "CSS", level: 85 },
   { name: "JavaScript", level: 80 },
+  { name: "TypeScript", level: 60 },
   { name: "React", level: 85 },
+  { name: "Next.js", level: 65 },
   { name: "Tailwind CSS", level: 80 },
   { name: "Node.js", level: 70 },
   { name: "Express.js", level: 70 },
