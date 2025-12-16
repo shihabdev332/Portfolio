@@ -1,8 +1,12 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import React from "react";
+import React, { useEffect } from "react";
+import {
+  motion,
+  useAnimation,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FaExternalLinkAlt } from "react-icons/fa";
-
 
 const projects = [
   {
@@ -12,7 +16,7 @@ const projects = [
       "A modern and responsive website for a construction company, showcasing services and projects.",
     image: "/2.png",
     link: "https://agency-weld-kappa.vercel.app/",
-    code:"https://github.com/shihabdev332/Agency",
+    code: "https://github.com/shihabdev332/Agency",
     technologies: ["HTML", "CSS", "JavaScript", "React", "Tailwind"],
   },
   {
@@ -22,7 +26,7 @@ const projects = [
       "A modern e-commerce website with fast performance and dynamic UI.",
     image: "/e1.png",
     link: "https://online-shop-txm5.vercel.app/",
-    code:"https://github.com/shihabdev332/online-Shop",
+    code: "https://github.com/shihabdev332/online-Shop",
     technologies: ["React", "Tailwind", "JavaScript"],
   },
   {
@@ -32,7 +36,7 @@ const projects = [
       "A fully responsive e-commerce website with seamless user experience.",
     image: "/client.png",
     link: "https://digital-shop-front-end-ebkb.vercel.app/",
-    code:"https://github.com/shihabdev332/Digital-Shop-Front-end",
+    code: "https://github.com/shihabdev332/Digital-Shop-Front-end",
     technologies: ["React", "Tailwind", "Express", "MongoDB"],
   },
   {
@@ -41,12 +45,12 @@ const projects = [
     description: "A modern admin panel with full control and clean UI.",
     image: "/admin.png",
     link: "https://digital-shop-admin-panel-6x1n.vercel.app/",
-    code:"https://github.com/shihabdev332/Digital-shop-admin-panel",
+    code: "https://github.com/shihabdev332/Digital-shop-admin-panel",
     technologies: ["React", "Tailwind", "Express", "MongoDB"],
   },
 ];
 
-const WorkCard = ({ project }) => {
+const WorkCard = ({ project, controls, index }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -66,11 +70,17 @@ const WorkCard = ({ project }) => {
 
   return (
     <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      initial="hidden"
+      animate={controls}
+      transition={{ delay: index * 0.15, duration: 0.6 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY }}
       whileHover={{ scale: 1.06 }}
-      transition={{ type: "spring", stiffness: 220, damping: 18 }}
       className="relative rounded-xl perspective-[1200px]"
     >
       {/* Animated Gradient Border */}
@@ -78,11 +88,7 @@ const WorkCard = ({ project }) => {
         animate={{
           backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
         }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         className="absolute inset-[-2px] rounded-xl
         bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400
         bg-[length:300%_300%] blur-sm opacity-80"
@@ -113,27 +119,30 @@ const WorkCard = ({ project }) => {
           </p>
 
           <div className="flex justify-center gap-5">
-             <button
+            <button
               onClick={() => window.open(project.link, "_blank")}
-              className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-full text-white transition cursor-pointer flex gap-1 font-bold"
+              className="bg-purple-600 hover:bg-purple-800 px-6 py-2 rounded-full text-white transition flex gap-1 font-bold cursor-pointer"
             >
-               Visit Website<FaExternalLinkAlt  className="text-sm mt-1.5 text-black"/>
+              Visit Website
+              <FaExternalLinkAlt className="text-sm mt-1.5 text-black" />
             </button>
-              <button
+
+            <button
               onClick={() => window.open(project.code, "_blank")}
-              className="bg-green-600 hover:bg-green-800 px-6 py-2 rounded-full text-white transition cursor-pointer flex gap-1 font-bold"
+              className="bg-green-600 hover:bg-green-800 px-6 py-2 rounded-full text-white transition flex gap-1 font-bold cursor-pointer"
             >
-               Source Code<FaExternalLinkAlt  className="text-sm mt-1.5 text-black"/>
+              Source Code
+              <FaExternalLinkAlt className="text-sm mt-1.5 text-black" />
             </button>
           </div>
         </div>
       </motion.div>
 
-      {/* 🔥 Smooth Top Hover Text */}
+      {/* Top Hover Text */}
       <motion.div
         initial={{ opacity: 0, y: -15 }}
         whileHover={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
+        transition={{ duration: 0.45 }}
         className="absolute top-4 left-0 right-0 z-20
         text-center text-blue-500 text-xl font-bold pointer-events-none"
       >
@@ -144,33 +153,56 @@ const WorkCard = ({ project }) => {
 };
 
 const Work = () => {
-  const [headerRef, headerInView] = useInView({ triggerOnce: true });
-  const [descRef, descInView] = useInView({ triggerOnce: true });
+  const controls = useAnimation();
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 0.2,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    } else {
+      controls.start("hidden");
+    }
+  }, [inView, controls]);
 
   return (
-    <section id="work" className="py-20">
+    <section id="work" ref={ref} className="py-20">
       <motion.h2
-        ref={headerRef}
         initial={{ opacity: 0, y: 20 }}
-        animate={headerInView ? { opacity: 1, y: 0 } : {}}
+        animate={controls}
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0 },
+        }}
         className="text-4xl text-white font-bold underline text-center mb-6"
       >
-        My Work Section
+        My Work
       </motion.h2>
 
       <motion.p
-        ref={descRef}
         initial={{ opacity: 0, y: 20 }}
-        animate={descInView ? { opacity: 1, y: 0 } : {}}
-        className="text-blue-500 text-xl font-semibold text-center mb-12"
+        animate={controls}
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        transition={{ delay: 0.15 }}
+        className="text-gray-400 text-center mb-12"
       >
         A collection of my latest projects showcasing modern UI and smooth
         interactions.
       </motion.p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 max-w-7xl mx-auto px-4">
-        {projects.map((project) => (
-          <WorkCard key={project.id} project={project} />
+        {projects.map((project, index) => (
+          <WorkCard
+            key={project.id}
+            project={project}
+            index={index}
+            controls={controls}
+          />
         ))}
       </div>
     </section>
