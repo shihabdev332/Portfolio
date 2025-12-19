@@ -35,7 +35,7 @@ const projects = [
     description:
       "A fully responsive e-commerce website with seamless user experience.",
     image: "/client.png",
-    link: "https://digital-shop-front-end-ebkb.vercel.app/",
+    link: "https://shoping-mall-zeta.vercel.app/",
     code: "https://github.com/shihabdev332/Digital-Shop-Front-end",
     technologies: ["React", "Tailwind", "Express", "MongoDB"],
   },
