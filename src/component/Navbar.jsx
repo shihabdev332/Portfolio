@@ -28,12 +28,12 @@ const Navbar = () => {
   };
 
   return (
-    <div>
+    <nav className="relative z-50">
       {/* Desktop Navbar */}
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }} // faster animation
+        transition={{ duration: 0.3 }}
         className="container mx-auto hidden md:flex justify-between items-center py-6 shadow-[0_4px_6px_-1px_rgba(156,163,175,0.3)]"
       >
         <div className="text-xl lg:text-2xl font-bold flex items-center gap-1 cursor-pointer">
@@ -52,37 +52,40 @@ const Navbar = () => {
           </ul>
         </div>
         <a
-        href="#contact"
-         className="md:text-base lg:text-lg bg-purple-500 hover:bg-purple-700 transition duration-200 py-2 text-white rounded-4xl cursor-pointer font-bold">
-        Hire ME
+          href="#contact"
+          className="md:text-base lg:text-lg bg-purple-500 hover:bg-purple-700 transition duration-200 py-2 px-6 text-white rounded-4xl cursor-pointer font-bold"
+        >
+          Hire ME
         </a>
       </motion.div>
 
       {/* Mobile Navbar */}
-      <div className="flex md:hidden justify-between items-center">
+      <div className="flex md:hidden justify-between items-center px-6 py-4">
+        {/* Mobile Menu Icon & Drawer */}
         <motion.div animate={menu ? "open" : "closed"} className="relative">
           <motion.div
             variants={variants}
-            onClick={() => setMenu((prev) => !prev)}
-            className="bg-purple-300 w-2/3 h-screen text-black font-bold cursor-pointer fixed z-10"
+            className="bg-purple-300 w-[250px] h-screen text-black font-bold fixed top-0 left-0 z-10"
           >
-            <div className="px-7 py-6 cursor-pointer">
+            {/* The Toggle Button Container - Adjusted for alignment */}
+            <div 
+              onClick={() => setMenu((prev) => !prev)}
+              className="px-7 py-6 cursor-pointer flex items-center h-[80px]" 
+            >
               {menu ? <IoCloseSharp size={30} /> : <AiOutlineMenu size={30} />}
             </div>
+
             {menu && (
-              <div className="flex flex-col justify-center items-center mt-10 cursor-pointer">
-                <ul className="space-y-6 text-black text-lg">
+              <div className="flex flex-col justify-center items-center mt-10">
+                <ul className="space-y-6 text-black text-lg text-center">
                   {items.map(({ id, text, to }) => (
-                    <li
-                      key={id}
-                      className="hover:text-purple-500 duration-150 cursor-pointer"
-                    >
+                    <li key={id} className="hover:text-purple-500 duration-150 cursor-pointer">
                       <Link
                         to={to}
                         smooth={true}
                         duration={300}
                         offset={-70}
-                        onClick={handleMobileLinkClick} // close menu on click
+                        onClick={handleMobileLinkClick}
                       >
                         {text}
                       </Link>
@@ -90,26 +93,38 @@ const Navbar = () => {
                   ))}
                 </ul>
                 <a 
-                href="#contact"
-                className="text-lg bg-purple-500 hover:bg-purple-700 text-white px-4 py-2 rounded-4xl mt-6 cursor-pointer">
+                  href="#contact"
+                  className="text-lg bg-purple-500 hover:bg-purple-700 text-white px-6 py-2 rounded-4xl mt-10 cursor-pointer inline-block"
+                >
                   Hire ME
                 </a>
               </div>
             )}
           </motion.div>
+          
+          {/* Menu Trigger Icon (Visible when closed) */}
+          {!menu && (
+             <div 
+             onClick={() => setMenu(true)}
+             className="cursor-pointer py-2"
+           >
+             <AiOutlineMenu size={30} className="text-white" />
+           </div>
+          )}
         </motion.div>
 
+        {/* Logo - Adjusted to match the vertical center of the menu icon */}
         <motion.div
           initial={{ opacity: 0, x: 50, y: -50 }}
           animate={{ opacity: 1, x: 0, y: 0 }}
-          transition={{ duration: 0.3 }} // faster animation
-          className="text-xl font-bold items-center gap-2 py-6 px-4 cursor-pointer"
+          transition={{ duration: 0.3 }}
+          className="text-xl font-bold flex items-center gap-1 py-2 cursor-pointer"
         >
           <span className="text-purple-500">PRO</span>
           <span className="text-purple-600 italic">CODER</span>
         </motion.div>
       </div>
-    </div>
+    </nav>
   );
 };
 
