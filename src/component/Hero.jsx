@@ -1,9 +1,22 @@
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect } from "react";
 
 const typingTexts = [
-  { text: "Hello, I'm Shihab...", color: "#ce83e3" },
-  { text: "A  Full Stack Developer...", color: "#7dd3fc" },
+  { text: "Hello, I'm Shihab...", color: "#a855f7" },
+  { text: "A Full Stack Developer...", color: "#0ea5e9" },
+];
+
+const codeSnippets = [
+  "const app = express();",
+  "mongoose.connect(DB_URI);",
+  "app.use(cors());",
+  "export default function Hero()",
+  "useEffect(() => { ... }, []);",
+  "const [user, setUser] = useState();",
+  "api.post('/v1/auth/login')",
+  "npm install framer-motion",
+  "const data = await res.json();",
+  "export const dynamic = 'force-dynamic';",
 ];
 
 const Hero = () => {
@@ -15,32 +28,25 @@ const Hero = () => {
 
   const controls = useAnimation();
 
-  // Jelly-like animation loop
+  // Profile ring rotation
   useEffect(() => {
     controls.start({
       rotate: 360,
-      scaleX: [1, 1.02, 0.98, 1, 1],
-      scaleY: [1, 0.98, 1.02, 1, 1],
-      transition: {
-        rotate: { repeat: Infinity, duration: 3, ease: "linear" },
-        scaleX: { repeat: Infinity, duration: 2, ease: "easeInOut" },
-        scaleY: { repeat: Infinity, duration: 2, ease: "easeInOut" },
-      },
+      transition: { repeat: Infinity, duration: 10, ease: "linear" },
     });
   }, [controls]);
 
-  // Typewriter effect
+  // Typing logic
   useEffect(() => {
     let timeout;
     const fullText = typingTexts[currentText].text;
-
     if (typing) {
       if (displayText.length < fullText.length) {
         timeout = setTimeout(() => {
           setDisplayText(fullText.slice(0, displayText.length + 1));
         }, 100);
       } else {
-        timeout = setTimeout(() => setTyping(false), 1000);
+        timeout = setTimeout(() => setTyping(false), 2000);
       }
     } else {
       if (displayText.length > 0) {
@@ -52,141 +58,179 @@ const Hero = () => {
         setCurrentText((prev) => (prev + 1) % typingTexts.length);
       }
     }
-
     return () => clearTimeout(timeout);
   }, [displayText, typing, currentText]);
 
   // Cursor blink
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCursorVisible((v) => !v);
-    }, 500);
+    const interval = setInterval(() => setCursorVisible((v) => !v), 530);
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToAbout = () => {
-    const section = document.getElementById("about");
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
     if (section) section.scrollIntoView({ behavior: "smooth" });
   };
 
-  const goToContact = () => {
-    window.location.href = "#contact";
-  };
-
   return (
-    <div className="text-white py-10">
-
-      {/* Profile Image with Thin Jelly-like Ring */}
-      <div
-        className="relative w-[260px] h-[260px] mx-auto flex items-center justify-center cursor-pointer"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        {/*Rotating Ring */}
-        <motion.div
-          animate={controls}
-          className={`absolute inset-0 rounded-full p-[1px] 
-            bg-[conic-gradient(from_0deg,#ff0080,#7928ca,#2afadf,#00ff88,#ff0080)]
-            ${hovered ? "shadow-[0_0_25px_#ff00ff]" : ""}`}
+    <section 
+      id="home"
+      className="relative text-white min-h-screen flex flex-col justify-center overflow-hidden bg-[#020205] font-['Space_Grotesk',_sans-serif]"
+    >
+      {/* --- BACKGROUND ANIMATION LAYER --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Subtle Grid dots */}
+        <div 
+          className="absolute inset-0 opacity-[0.05]" 
+          style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
         />
+        
+        {/* Animated Code Streams */}
+        <div className="absolute inset-0 opacity-[0.08] flex justify-between px-10">
+          <motion.div 
+            animate={{ y: [0, -1000] }} 
+            transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+            className="font-['Fira_Code',_monospace] text-[10px] text-purple-500 space-y-12"
+          >
+            {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((s, i) => (
+              <span key={i} className="block">{s}</span>
+            ))}
+          </motion.div>
+          
+          <motion.div 
+            animate={{ y: [-1000, 0] }} 
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            className="font-['Fira_Code',_monospace] text-[10px] text-sky-500 space-y-12 text-right"
+          >
+            {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((s, i) => (
+              <span key={i} className="block">{s}</span>
+            ))}
+          </motion.div>
+        </div>
 
-        {/* Inner Circle (Photo Holder) */}
-        <div className="relative w-[245px] h-[245px] rounded-full bg-black overflow-hidden flex items-center justify-center">
-          <motion.img
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 1 }}
-            src="this.png" 
-            alt="Shihab"
-            className="w-full h-full object-cover rounded-full"
+        {/* Cinematic Light Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full" />
+      </div>
+
+      {/* --- CONTENT LAYER --- */}
+      <div className="relative z-10 container mx-auto px-6">
+        
+        {/* Profile Section */}
+        <div 
+          className="relative w-[280px] h-[280px] mx-auto mb-12 flex items-center justify-center cursor-pointer"
+          onMouseEnter={() => setHovered(true)} 
+          onMouseLeave={() => setHovered(false)}
+        >
+          {/* Rotating Outer Ring */}
+          <motion.div 
+            animate={controls} 
+            className="absolute inset-0 rounded-full border border-dashed border-purple-500/40 p-2" 
           />
+          
+          {/* Animated Gradient Border */}
+          <div className="relative w-[240px] h-[240px] rounded-full p-[3px] bg-gradient-to-tr from-purple-600 via-sky-400 to-emerald-400 animate-gradient-xy shadow-[0_0_50px_rgba(139,92,246,0.2)]">
+            <div className="w-full h-full rounded-full bg-[#020205] overflow-hidden border-4 border-[#020205]">
+              <motion.img 
+                initial={{ opacity: 0, scale: 0.8 }} 
+                animate={{ opacity: 1, scale: 1 }}
+                src="this.png" // Ensure this path is correct
+                alt="Shihab" 
+                className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500" 
+              />
+            </div>
+          </div>
 
-          {/* Hover Text */}
-          {hovered && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="absolute font-semibold mt-[-100px] text-white text-lg px-4 py-1 rounded"
-              style={{
-                textShadow: "0 0 8px #ff00ff, 0 0 12px #ff00ff",
-              }}
-            >
-              MERN Stack Developer
-            </motion.div>
-          )}
+          <AnimatePresence>
+            {hovered && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="absolute inset-0 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center border border-purple-500/30"
+              >
+                <p className="font-['Fira_Code'] text-xs font-bold tracking-widest text-purple-400 uppercase">MERN_ENGINEER</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Typography Section */}
+        <div className="text-center">
+          <motion.h1 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-4xl md:text-7xl font-bold tracking-tighter leading-none mb-6 min-h-[1.2em]"
+          >
+            <span style={{ color: typingTexts[currentText].color }} className="transition-colors duration-500">
+              {displayText}
+            </span>
+            <span className="text-white font-light ml-1">{cursorVisible ? "_" : " "}</span>
+          </motion.h1>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.5 }}
+          >
+            <h3 className="text-xl md:text-3xl font-light text-slate-300 tracking-wide mb-8">
+              Full-Stack <span className="text-white font-medium italic underline decoration-purple-500 underline-offset-8">Architect</span> & Digital Craftsman
+            </h3>
+          </motion.div>
+          
+          <motion.p 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            transition={{ delay: 0.7 }}
+            className="text-slate-500 font-['Fira_Code'] text-sm md:text-base max-w-xl mx-auto mb-12 bg-white/5 py-3 px-6 rounded-2xl border border-white/5 backdrop-blur-sm"
+          >
+            {`{ status: "Building scalable systems", core: ["React", "Node", "MongoDB"] }`}
+          </motion.p>
+        </div>
+
+        {/* Button Action Section */}
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+          <motion.button 
+            onClick={() => scrollToSection("about")}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168,85,247,0.4)" }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto px-10 py-4 bg-purple-600 rounded-xl font-bold tracking-widest text-[10px] uppercase transition-all shadow-lg"
+          >
+            Explore My Work
+          </motion.button>
+
+          <motion.button 
+            onClick={() => scrollToSection("contact")}
+            whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.08)" }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto px-10 py-4 border border-slate-700 rounded-xl font-bold tracking-widest text-[10px] uppercase text-slate-300 transition-all backdrop-blur-sm"
+          >
+            Initialize Contact
+          </motion.button>
         </div>
       </div>
 
-      {/* Hero Animated Heading */}
-      <div className="container mx-auto text-center mt-10">
-        <h1 className="text-[30px] md:text-5xl font-bold flex justify-center">
-          <span
-            style={{ color: typingTexts[currentText].color }}
-            className="mr-1"
-          >
-            {displayText}
-          </span>
-          <span className="text-white">{cursorVisible ? "|" : " "}</span>
-        </h1>
-      </div>
+      {/* --- CSS FOR GRADIENT ANIMATION --- */}
+      <style jsx>{`
+        @keyframes gradient-xy {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-xy {
+          background-size: 200% 200%;
+          animation: gradient-xy 5s ease infinite;
+        }
+      `}</style>
 
-      {/* Description */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="container mx-auto text-center mt-6"
+      {/* Scroll Down Indicator */}
+      <motion.div 
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-500 opacity-50 hidden md:block"
       >
-        <motion.h3
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-purple-400 text-[25px] font-semibold max-w-2xl mx-auto"
-        >
-          Passionate about user-friendly full-Stack web development and design.
-        </motion.h3>
-        
-        <motion.p
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-gray-400 text-lg max-w-2xl mx-auto"
-        >
-          I am a passionate Full Stack developer specializing in building
-          user-friendly and responsive web applications. I create modern,
-          interactive websites using React, Tailwind CSS, JavaScript, Node.js,
-          Express, and MongoDB. Constantly expanding my skills, I also work with
-          animations using Framer Motion and explore new technologies like
-          Three.js to deliver complete end-to-end digital solutions.
-        </motion.p>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-purple-500 to-transparent mx-auto" />
       </motion.div>
-
-      {/* Buttons */}
-      <div className="space-x-4 mx-auto text-center mt-6">
-        <motion.button
-          onClick={scrollToAbout}
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="bg-purple-500 text-white hover:bg-purple-700 px-6 py-3 rounded-full transition duration-300 cursor-pointer"
-        >
-          About Me
-        </motion.button>
-
-        <motion.button
-          onClick={goToContact}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="bg-purple-500 text-white hover:bg-purple-700 px-6 py-3 rounded-full transition duration-300 cursor-pointer"
-        >
-          Hire Me
-        </motion.button>
-      </div>
-
-    </div>
+    </section>
   );
 };
 
