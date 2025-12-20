@@ -2,8 +2,8 @@ import { motion, useAnimation } from "framer-motion";
 import React, { useState, useEffect } from "react";
 
 const typingTexts = [
-  { text: "Hello, I'm Shihab...", color: "#ce83e3" },
-  { text: "A  Full Stack Developer...", color: "#7dd3fc" },
+  { text: "Hello, I'm Shihab..", color: "#ce83e3" },
+  { text: "A FullStack Developer..", color: "#7dd3fc" },
 ];
 
 const Hero = () => {
@@ -121,7 +121,7 @@ const Hero = () => {
 
       {/* Hero Animated Heading */}
       <div className="container mx-auto text-center mt-10">
-        <h1 className="text-2xl md:text-5xl font-bold flex justify-center">
+        <h1 className="text-3xl md:text-5xl font-bold flex justify-center">
           <span
             style={{ color: typingTexts[currentText].color }}
             className="mr-1"
