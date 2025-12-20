@@ -2,8 +2,8 @@ import { motion, useAnimation } from "framer-motion";
 import React, { useState, useEffect } from "react";
 
 const typingTexts = [
-  { text: "Hello, I'm Shihab..", color: "#ce83e3" },
-  { text: "A FullStack Developer..", color: "#7dd3fc" },
+  { text: "Hello, I'm Shihab...", color: "#ce83e3" },
+  { text: "A  Full Stack Developer...", color: "#7dd3fc" },
 ];
 
 const Hero = () => {
@@ -22,7 +22,7 @@ const Hero = () => {
       scaleX: [1, 1.02, 0.98, 1, 1],
       scaleY: [1, 0.98, 1.02, 1, 1],
       transition: {
-        rotate: { repeat: Infinity, duration: 6, ease: "linear" },
+        rotate: { repeat: Infinity, duration: 3, ease: "linear" },
         scaleX: { repeat: Infinity, duration: 2, ease: "easeInOut" },
         scaleY: { repeat: Infinity, duration: 2, ease: "easeInOut" },
       },
@@ -78,7 +78,7 @@ const Hero = () => {
 
       {/* Profile Image with Thin Jelly-like Ring */}
       <div
-        className="relative w-72 h-72 mx-auto flex items-center justify-center cursor-pointer"
+        className="relative w-[260px] h-[260px] mx-auto flex items-center justify-center cursor-pointer"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
@@ -91,12 +91,12 @@ const Hero = () => {
         />
 
         {/* Inner Circle (Photo Holder) */}
-        <div className="relative w-64 h-64 rounded-full bg-black overflow-hidden flex items-center justify-center">
+        <div className="relative w-[245px] h-[245px] rounded-full bg-black overflow-hidden flex items-center justify-center">
           <motion.img
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 1 }}
-            src="this.png" // <-- Change to your photo path
+            src="this.png" 
             alt="Shihab"
             className="w-full h-full object-cover rounded-full"
           />
@@ -121,7 +121,7 @@ const Hero = () => {
 
       {/* Hero Animated Heading */}
       <div className="container mx-auto text-center mt-10">
-        <h1 className="text-3xl md:text-5xl font-bold flex justify-center">
+        <h1 className="text-[30px] md:text-5xl font-bold flex justify-center">
           <span
             style={{ color: typingTexts[currentText].color }}
             className="mr-1"
