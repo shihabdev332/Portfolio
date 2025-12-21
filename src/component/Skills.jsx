@@ -4,19 +4,19 @@ import { useInView } from "react-intersection-observer";
 
 const skills = [
   { name: "HTML", level: 90, color: "from-orange-500 to-red-600" },
-  { name: "CSS", level: 85, color: "from-blue-500 to-indigo-600" },
+  { name: "CSS", level: 95, color: "from-blue-500 to-indigo-600" },
   { name: "JavaScript", level: 80, color: "from-yellow-400 to-orange-500" },
   { name: "TypeScript", level: 60, color: "from-blue-600 to-sky-400" },
   { name: "React", level: 85, color: "from-sky-400 to-blue-500" },
-  { name: "Next.js", level: 65, color: "from-white to-gray-400" },
-  { name: "Tailwind CSS", level: 80, color: "from-teal-400 to-cyan-500" },
-  { name: "Node.js", level: 70, color: "from-green-500 to-emerald-600" },
-  { name: "Express.js", level: 70, color: "from-gray-300 to-gray-500" },
-  { name: "MongoDB", level: 65, color: "from-emerald-500 to-green-700" },
-  { name: "Mongoose", level: 65, color: "from-red-800 to-red-600" },
+  { name: "Next.js", level: 80, color: "from-white to-gray-400" },
+  { name: "Tailwind CSS", level: 95, color: "from-teal-400 to-cyan-500" },
+  { name: "Node.js", level: 80, color: "from-green-500 to-emerald-600" },
+  { name: "Express.js", level: 80, color: "from-gray-300 to-gray-500" },
+  { name: "MongoDB", level: 95, color: "from-emerald-500 to-green-700" },
+  { name: "Mongoose", level: 90, color: "from-red-800 to-red-600" },
   { name: "Material UI", level: 75, color: "from-blue-400 to-blue-700" },
-  { name: "Framer Motion", level: 70, color: "from-purple-500 to-pink-500" },
-  { name: "Three.js", level: 50, color: "from-white to-purple-400" },
+  { name: "Framer Motion", level: 90, color: "from-purple-500 to-pink-500" },
+  { name: "Three.js", level: 30, color: "from-white to-purple-400" },
 ];
 
 const codeSnippets = [
