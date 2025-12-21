@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiMenuAlt3 } from "react-icons/hi";
-import { IoClose, IoHomeOutline } from "react-icons/io5";
+import { IoClose } from "react-icons/io5"; // Removed IoHomeOutline as it is no longer used
 import { Link } from "react-scroll";
 
 const Navbar = () => {
@@ -27,21 +27,21 @@ const Navbar = () => {
     }`}>
       <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
         
-        {/* --- LOGO / HOME --- */}
-        <Link to="home" smooth={true} duration={500} className="cursor-pointer group flex items-center gap-3">
-          <motion.div 
-            whileHover={{ rotate: -10, scale: 1.1 }}
-            className="w-10 h-10 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)]"
-          >
-            <IoHomeOutline size={20} className="text-white" />
-          </motion.div>
-          <div className="text-xl lg:text-2xl font-black tracking-tighter">
-            <span className="text-white">PRO</span>
-            <span className="text-purple-500 italic">CODER</span>
-          </div>
+        {/* --- LOGO SECTION --- */}
+        <Link to="home" smooth={true} duration={500} className="cursor-pointer">
+          <motion.img 
+            src="/logo.png" 
+            alt="Logo"
+            // Simple hover animation for the logo
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            // h-10 sets the height (approx 40px), w-auto keeps aspect ratio. 
+            // object-contain ensures it doesn't get cut off.
+            className="h-10 w-auto object-contain" 
+          />
         </Link>
 
-        {/* --- DESKTOP NAV WITH AUTO-FIX UNDERLINE --- */}
+        {/* --- DESKTOP NAV --- */}
         <ul className="hidden md:flex items-center gap-10">
           {items.map(({ id, text, to }) => (
             <li key={id} className="relative">
@@ -89,11 +89,15 @@ const Navbar = () => {
               className="fixed inset-0 bg-[#050507] z-[120] flex flex-col p-10"
             >
               <div className="flex justify-between items-center mb-16">
-                <div className="text-xl font-black text-white">PRO<span className="text-purple-500 italic">CODER</span></div>
+                
+                {/* Mobile Menu Logo */}
+                <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
+
                 <button onClick={() => setMenu(false)} className="p-2 text-white bg-white/5 rounded-full hover:bg-white/10 transition-all">
                   <IoClose size={30} />
                 </button>
               </div>
+
               <ul className="space-y-8">
                 {items.map(({ id, text, to }) => (
                   <li key={id}>
