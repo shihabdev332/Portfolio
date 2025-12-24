@@ -5,7 +5,8 @@ import { FiSend, FiPhone, FiMail, FiMapPin, FiCheckCircle } from "react-icons/fi
 import { FaWhatsapp } from "react-icons/fa";
 
 const Contact = () => {
-  const whatsappNumber = "+8801757288373";
+  // Corrected: Pure numeric format for WhatsApp link safety
+  const whatsappNumber = "8801757288373"; 
   const { ref, inView } = useInView({ triggerOnce: false, threshold: 0.1 });
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -18,8 +19,10 @@ const Contact = () => {
   };
 
   const contactMethods = [
-    { icon: <FiMail />, label: "Email", value: "shihab.dev332@gmial.com", color: "text-blue-400" },
-    { icon: <FiPhone />, label: "Phone", value: "+880 1757 288373", color: "text-emerald-400" },
+    // Corrected: Spelling fixed from gmial to gmail
+    { icon: <FiMail />, label: "Email", value: "shihab.dev332@gmail.com", color: "text-blue-400" }, 
+    // Corrected: Direct phone number display formatting
+    { icon: <FiPhone />, label: "Phone", value: "+880 1757-288373", color: "text-emerald-400" },
     { icon: <FiMapPin />, label: "Location", value: "Dhaka, Bangladesh", color: "text-purple-400" },
   ];
 
