@@ -191,10 +191,10 @@ const Hero = () => {
         {/* Button Action Section */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
           <motion.button 
-            onClick={() => scrollToSection("about")}
+            onClick={() => scrollToSection("work")}
             whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168,85,247,0.4)" }}
             whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-auto px-10 py-4 bg-purple-600 rounded-xl font-bold tracking-widest text-[10px] uppercase transition-all shadow-lg"
+            className="w-full sm:w-auto px-10 py-4 bg-purple-600 rounded-xl font-bold tracking-widest text-[10px] uppercase transition-all cursor-pointer shadow-lg"
           >
             Explore My Work
           </motion.button>
@@ -203,7 +203,7 @@ const Hero = () => {
             onClick={() => scrollToSection("contact")}
             whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.08)" }}
             whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-auto px-10 py-4 border border-slate-700 rounded-xl font-bold tracking-widest text-[10px] uppercase text-slate-300 transition-all backdrop-blur-sm"
+            className="w-full sm:w-auto px-10 py-4 border border-slate-700 rounded-xl font-bold tracking-widest text-[10px] uppercase text-slate-300 transition-all backdrop-blur-sm cursor-pointer"
           >
             Initialize Contact
           </motion.button>
