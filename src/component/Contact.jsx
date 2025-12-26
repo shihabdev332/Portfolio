@@ -5,21 +5,44 @@ import { FiSend, FiMail, FiMapPin, FiCheckCircle } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 
 const Contact = () => {
-  // Corrected: Pure numeric format for WhatsApp link safety
   const whatsappNumber = "8801757288373"; 
   const { ref, inView } = useInView({ triggerOnce: false, threshold: 0.1 });
 
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  // Web3Forms এর জন্য লোডিং স্টেট
+  const [isSending, setIsSending] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 4000);
+    setIsSending(true);
+
+    const formData = new FormData(e.target);
+    // আপনার দেওয়া এক্সেস কী এখানে বসানো হয়েছে
+    formData.append("access_key", "9f1e026a-f0ee-46ff-a4d5-5869167169cb");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsSubmitted(true);
+        e.target.reset();
+        setTimeout(() => setIsSubmitted(false), 4000);
+      } else {
+        alert("Submission failed, please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form", error);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const contactMethods = [
-    // Corrected: Spelling fixed from gmial to gmail
     { icon: <FiMail />, label: "Email", value: "shihab.dev332@gmail.com", color: "text-blue-400" }, 
     { icon: <FiMapPin />, label: "Location", value: "Dhaka, Bangladesh", color: "text-purple-400" },
   ];
@@ -29,11 +52,9 @@ const Contact = () => {
       
       {/* --- ADVANCED BACKGROUND --- */}
       <div className="absolute inset-0 z-0">
-        {/* Animated Grid */}
         <div className="absolute inset-0 opacity-[0.05]" 
              style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
         
-      
         <motion.div 
           animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
           transition={{ duration: 8, repeat: Infinity }}
@@ -123,32 +144,35 @@ const Contact = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-[10px] font-mono text-slate-500 ml-1 uppercase">Identification</label>
-                        <input required type="text" placeholder="Full Name" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-700" />
+                        {/* name attribute যোগ করা হয়েছে */}
+                        <input name="name" required type="text" placeholder="Full Name" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-700" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-mono text-slate-500 ml-1 uppercase">Return_Path</label>
-                        <input required type="email" placeholder="Email Address" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-700" />
+                        {/* name attribute যোগ করা হয়েছে */}
+                        <input name="email" required type="email" placeholder="Email Address" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-700" />
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-[10px] font-mono text-slate-500 ml-1 uppercase">Communication_Payload</label>
-                      <textarea required rows="4" placeholder="Your message details..." className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-700 resize-none" />
+                      {/* name attribute যোগ করা হয়েছে */}
+                      <textarea name="message" required rows="4" placeholder="Your message details..." className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-slate-700 resize-none" />
                     </div>
 
                     <motion.button
+                      disabled={isSending}
                       type="submit"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 py-5 rounded-2xl text-white font-black text-xs tracking-[0.3em] shadow-xl hover:shadow-purple-500/30 transition-all flex items-center justify-center gap-3 cursor-pointer"
+                      className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 py-5 rounded-2xl text-white font-black text-xs tracking-[0.3em] shadow-xl hover:shadow-purple-500/30 transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      SEND_MESSAGE <FiSend/>
+                      {isSending ? "TRANSMITTING..." : "SEND_MESSAGE"} <FiSend/>
                     </motion.button>
                   </form>
                 )}
               </AnimatePresence>
 
-            
               <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-100 transition-opacity">
                  <div className="w-8 h-8 border-t-2 border-r-2 border-purple-500 rounded-tr-xl"></div>
               </div>
