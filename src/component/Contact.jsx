@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { FiSend, FiPhone, FiMail, FiMapPin, FiCheckCircle } from "react-icons/fi";
+import { FiSend, FiMail, FiMapPin, FiCheckCircle } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 
 const Contact = () => {
@@ -21,8 +21,6 @@ const Contact = () => {
   const contactMethods = [
     // Corrected: Spelling fixed from gmial to gmail
     { icon: <FiMail />, label: "Email", value: "shihab.dev332@gmail.com", color: "text-blue-400" }, 
-    // Corrected: Direct phone number display formatting
-    { icon: <FiPhone />, label: "Phone", value: "+880 1757-288373", color: "text-emerald-400" },
     { icon: <FiMapPin />, label: "Location", value: "Dhaka, Bangladesh", color: "text-purple-400" },
   ];
 
