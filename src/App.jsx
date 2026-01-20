@@ -14,22 +14,25 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   return (
-    <>
-      {loading && <Loading onFinish={() => setLoading(false)} />}
-      {!loading && (
-        <div>
+    <main className="bg-[#0F0F13] selection:bg-purple-500/30">
+      {loading ? (
+        <Loading onFinish={() => setLoading(false)} />
+      ) : (
+        <div id="smooth-wrapper">
           <Navbar />
-          <Hero />
-          <About />
-          <Skills />
-          <Services />
-          <Work />
-          <Company />
-          <Contact />
-          <Footer />
+          <div id="smooth-content">
+            <Hero />
+            <About />
+            <Skills />
+            <Services />
+            <Work />
+            <Company />
+            <Contact />
+            <Footer />
+          </div>
         </div>
       )}
-    </>
+    </main>
   );
 };
 

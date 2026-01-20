@@ -1,12 +1,61 @@
 @import "tailwindcss";
 
-body{
 
-background-color: #0F0F13;
-
-
+body {
+  background-color: #0F0F13;
+  color: white;
+  overflow-x: hidden;
+  /* স্মুথ স্ক্রলিংয়ের জন্য */
+  scroll-behavior: smooth;
 }
 
+/* --- Navigation Active State --- */
+.nav-active { 
+  color: white !important; 
+  opacity: 1 !important;
+}
 
-.nav-active { color: white !important; }
-.nav-active span { width: 100% !important; }
+.nav-active span { 
+  width: 100% !important; 
+}
+
+/* --- GSAP & Performance Optimizations --- */
+
+
+.service-card, .nav-item, .hero-content {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0); 
+}
+
+/* --- Mobile Optimization (Performance Fix) --- */
+@media (max-width: 768px) {
+ 
+  .service-card, .navbar-glass {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    background-color: rgba(10, 10, 12, 0.95) !important; 
+  }
+
+
+  .service-card {
+    shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+}
+
+/* --- Custom Utilities --- */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Text Selection Color */
+::selection {
+  background-color: rgba(168, 85, 247, 0.3);
+  color: #fff;
+}
