@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+
 import {
   HiUserGroup,
   HiOutlineServer,
@@ -23,145 +24,244 @@ const codeSnippets = [
   "SEO.optimize({ speed: '100ms' })",
 ];
 
-const services = [
-  { icon: <RiProfileLine />, title: "Portfolio Development", stack: "GSAP / React / Three.js", desc: "Performance-optimized personal brands built with premium motion physics." },
-  { icon: <LiaPagerSolid />, title: "Landing Pages", stack: "Tailwind / Framer / Vite", desc: "High-converting single-page applications with scroll-triggered engagement." },
-  { icon: <HiUserGroup />, title: "Agency Solutions", stack: "Next.js / TypeScript", desc: "Scalable professional architectures that establish market authority." },
-  { icon: <HiOutlineServer />, title: "Full-Stack MERN", stack: "Node / Express / Mongo", desc: "End-to-end applications with modular server logic and database clusters." },
-  { icon: <SiMongodb />, title: "RESTful Backend", stack: "Redis / Mongoose / API", desc: "Complex API design focusing on low latency and high availability." },
-  { icon: <HiOutlineShieldCheck />, title: "Security & Auth", stack: "JWT / OAuth / bcrypt", desc: "Identity management with role-based access control (RBAC) protocols." },
-  { icon: <MdProductionQuantityLimits />, title: "E-commerce UI", stack: "Redux / Stripe / CMS", desc: "Seamless shopping flows with state-managed carts and secure payments." },
-  { icon: <SiFigma />, title: "Figma to React", stack: "Design Tokens / Clean Code", desc: "Precise translation of design tokens into reusable Tailwind components." },
-  { icon: <PiBaseballHelmetDuotone />, title: "Corporate Systems", stack: "Dashboard / Chart.js", desc: "Internal tools and corporate portals with robust data visualization." },
-];
-
 const Services = () => {
   const containerRef = useRef(null);
 
-  useGSAP(() => {
-    // Background streams
-    gsap.to(".code-stream-up", { y: -500, duration: 40, repeat: -1, ease: "none" });
-    gsap.to(".code-stream-down", { y: 500, duration: 35, repeat: -1, ease: "none" });
+  const services = useMemo(
+    () => [
+      { icon: <RiProfileLine />, title: "Portfolio Development", stack: "GSAP / React / Three.js", desc: "Performance-optimized personal brands built with premium motion physics." },
+      { icon: <LiaPagerSolid />, title: "Landing Pages", stack: "Tailwind / Framer / Vite", desc: "High-converting single-page applications with scroll-triggered engagement." },
+      { icon: <HiUserGroup />, title: "Agency Solutions", stack: "Next.js / TypeScript", desc: "Scalable professional architectures that establish market authority." },
+      { icon: <HiOutlineServer />, title: "Full-Stack MERN", stack: "Node / Express / Mongo", desc: "End-to-end applications with modular server logic and database clusters." },
+      { icon: <SiMongodb />, title: "RESTful Backend", stack: "Redis / Mongoose / API", desc: "Complex API design focusing on low latency and high availability." },
+      { icon: <HiOutlineShieldCheck />, title: "Security & Auth", stack: "JWT / OAuth / bcrypt", desc: "Identity management with role-based access control (RBAC) protocols." },
+      { icon: <MdProductionQuantityLimits />, title: "E-commerce UI", stack: "Redux / Stripe / CMS", desc: "Seamless shopping flows with state-managed carts and secure payments." },
+      { icon: <SiFigma />, title: "Figma to React", stack: "Design Tokens / Clean Code", desc: "Precise translation of design tokens into reusable Tailwind components." },
+      { icon: <PiBaseballHelmetDuotone />, title: "Corporate Systems", stack: "Dashboard / Chart.js", desc: "Internal tools and corporate portals with robust data visualization." },
+    ],
+    []
+  );
 
-    // Header Animation
-    gsap.from(".srv-header-item", {
-      scrollTrigger: {
-        trigger: ".services-header",
-        start: "top 90%",
-      },
-      opacity: 0,
-      y: 30,
-      stagger: 0.2,
-      duration: 1,
-      ease: "power3.out"
-    });
+  useGSAP(
+    () => {
+      /* -------- Background Streams -------- */
+      gsap.to(".code-stream-up", {
+        y: -500,
+        duration: 35,
+        repeat: -1,
+        ease: "none",
+        force3D: true,
+      });
 
-    // Grid Cards Animation (Fixing the blank issue)
-    gsap.from(".service-card", {
-      scrollTrigger: {
-        trigger: ".services-grid",
-        start: "top 85%", // Trigger earlier
-        toggleActions: "play none none none",
-      },
-      opacity: 0,
-      y: 50,
-      scale: 0.9,
-      stagger: 0.1,
-      duration: 1,
-      ease: "expo.out",
-      clearProps: "all" // এনিমেশন শেষ হলে সব প্রপার্টি ক্লিন করবে যাতে হোভার ইফেক্ট কাজ করে
-    });
-  }, { scope: containerRef });
+      gsap.to(".code-stream-down", {
+        y: 500,
+        duration: 30,
+        repeat: -1,
+        ease: "none",
+        force3D: true,
+      });
 
+      /* -------- Header -------- */
+      gsap.from(".srv-header-item", {
+        scrollTrigger: {
+          trigger: ".services-header",
+          start: "top 95%",
+        },
+        opacity: 0,
+        y: 40,
+        stagger: 0.15,
+        duration: 1.2,
+        ease: "power4.out",
+      });
+
+      /* -------- Cards -------- */
+      gsap.from(".service-card", {
+        scrollTrigger: {
+          trigger: ".services-grid",
+          start: "top 85%",
+        },
+        opacity: 0,
+        y: 60,
+        scale: 0.95,
+        stagger: 0.08,
+        duration: 1.4,
+        ease: "expo.out",
+        clearProps: "all",
+      });
+
+      /* -------- CTA -------- */
+      gsap.from(".cta-box", {
+        scrollTrigger: {
+          trigger: ".cta-box",
+          start: "top 90%",
+        },
+        opacity: 0,
+        y: 30,
+        duration: 1.2,
+        ease: "power3.out",
+      });
+    },
+    { scope: containerRef }
+  );
+
+  /* ---------- Hover (GPU SAFE) ---------- */
   const onEnter = (e) => {
+    if (window.matchMedia("(hover: none)").matches) return;
+
     const card = e.currentTarget;
-    gsap.to(card, { borderColor: "rgba(168, 85, 247, 0.4)", y: -10, duration: 0.4 });
-    gsap.to(card.querySelector(".icon-box"), { rotateY: 180, backgroundColor: "#a855f7", color: "#fff", duration: 0.5 });
-    gsap.to(card.querySelector(".glow-layer"), { opacity: 1, scale: 1.5, duration: 0.5 });
+    gsap.killTweensOf(card);
+
+    gsap.to(card, {
+      y: -12,
+      borderColor: "rgba(168,85,247,.5)",
+      backgroundColor: "rgba(12,12,18,1)",
+      duration: 0.35,
+      ease: "power2.out",
+      force3D: true,
+    });
+
+    gsap.to(card.querySelector(".icon-box"), {
+      rotateY: 180,
+      scale: 1.1,
+      backgroundColor: "#a855f7",
+      color: "#fff",
+      duration: 0.6,
+      ease: "expo.out",
+    });
+
+    gsap.to(card.querySelector(".glow-layer"), {
+      opacity: 0.6,
+      scale: 1.8,
+      duration: 0.6,
+      ease: "power2.out",
+    });
   };
 
   const onLeave = (e) => {
     const card = e.currentTarget;
-    gsap.to(card, { borderColor: "rgba(255, 255, 255, 0.05)", y: 0, duration: 0.4 });
-    gsap.to(card.querySelector(".icon-box"), { rotateY: 0, backgroundColor: "rgba(255, 255, 255, 0.03)", color: "#a855f7", duration: 0.5 });
-    gsap.to(card.querySelector(".glow-layer"), { opacity: 0, scale: 1, duration: 0.5 });
+
+    gsap.to(card, {
+      y: 0,
+      borderColor: "rgba(255,255,255,.05)",
+      backgroundColor: "rgba(8,8,12,.8)",
+      duration: 0.35,
+    });
+
+    gsap.to(card.querySelector(".icon-box"), {
+      rotateY: 0,
+      scale: 1,
+      backgroundColor: "rgba(255,255,255,.03)",
+      color: "#a855f7",
+      duration: 0.5,
+    });
+
+    gsap.to(card.querySelector(".glow-layer"), {
+      opacity: 0,
+      scale: 1,
+      duration: 0.5,
+    });
   };
 
   return (
-    <section id="services" ref={containerRef} className="relative py-32 overflow-hidden bg-[#020203]">
-      {/* Background Layer */}
+    <section
+      ref={containerRef}
+      id="services"
+      className="relative py-40 overflow-hidden bg-[#010103]"
+    >
+      {/* Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
-        <div className="absolute inset-0 opacity-[0.05] flex justify-between px-16 overflow-hidden">
-          <div className="code-stream-up flex flex-col gap-20 font-mono text-[9px] text-purple-500/40">
-            {[...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#fff 1px, transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
+
+        <div className="absolute inset-0 opacity-[0.07] flex justify-between px-10 md:px-24">
+          <div className="code-stream-up flex flex-col gap-24 font-mono text-[10px] text-purple-500/60 uppercase tracking-widest">
+            {[...codeSnippets, ...codeSnippets].map((s, i) => (
+              <span key={i} className="whitespace-nowrap italic">{s}</span>
+            ))}
           </div>
-          <div className="code-stream-down hidden md:flex flex-col gap-20 font-mono text-[9px] text-emerald-500/40">
-            {[...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
+          <div className="code-stream-down hidden md:flex flex-col gap-24 font-mono text-[10px] text-emerald-500/60 text-right uppercase tracking-widest">
+            {[...codeSnippets, ...codeSnippets].map((s, i) => (
+              <span key={i} className="whitespace-nowrap italic">{s}</span>
+            ))}
           </div>
         </div>
       </div>
 
       <div className="relative z-10 container mx-auto px-6">
         {/* Header */}
-        <div className="services-header max-w-4xl mb-24">
-          <div className="srv-header-item inline-block mb-6 font-mono text-[10px] text-purple-400 bg-purple-400/5 px-4 py-1.5 border border-purple-400/20 rounded-full uppercase tracking-[0.3em]">
-            System.Services_Overview
+        <div className="services-header max-w-5xl mb-32">
+          <div className="srv-header-item inline-flex gap-3 mb-8 font-mono text-[10px] text-purple-400 bg-purple-400/5 px-5 py-2 border border-purple-400/20 rounded-full uppercase tracking-[0.4em]">
+            <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+            System.Services_Architecture
           </div>
-          <h2 className="srv-header-item text-5xl md:text-8xl font-black text-white tracking-tighter leading-none mb-8">
-            ELITE <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-sky-400 to-emerald-400 italic">SOLUTIONS</span>
+
+          <h2 className="srv-header-item text-6xl md:text-9xl font-black text-white tracking-tighter leading-[0.85] mb-10">
+            ELITE <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-sky-400 to-emerald-400 italic">
+              SOLUTIONS
+            </span>
           </h2>
-          <p className="srv-header-item text-gray-400 text-lg md:text-2xl font-light max-w-2xl leading-relaxed">
-            I architect high-performance digital environments where luxury design meets technical excellence.
+
+          <p className="srv-header-item text-slate-400 text-xl md:text-3xl font-light max-w-3xl">
+            Architecting high-performance digital environments where{" "}
+            <span className="text-white">luxury design</span> meets{" "}
+            <span className="text-purple-400 italic font-mono">technical excellence</span>.
           </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Grid */}
+        <div className="services-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           {services.map((item, i) => (
             <div
               key={i}
               onMouseEnter={onEnter}
               onMouseLeave={onLeave}
-              className="service-card group relative p-10 rounded-3xl bg-[#08080c]/80 border border-white/5 backdrop-blur-xl overflow-hidden cursor-pointer"
+              className="service-card relative p-12 rounded-[2.5rem] bg-[#08080c]/80 border border-white/5 backdrop-blur-2xl overflow-hidden will-change-transform"
             >
-              <div className="glow-layer absolute -top-20 -right-20 w-40 h-40 bg-purple-600/20 blur-[80px] opacity-0 pointer-events-none" />
-              
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-10">
-                  <div className="icon-box w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl text-purple-400 transition-all duration-500">
+              <div className="glow-layer absolute -top-24 -right-24 w-56 h-56 bg-purple-600/20 blur-[100px] opacity-0" />
+
+              <div className="relative z-10 h-full flex flex-col">
+                <div className="flex justify-between mb-12">
+                  <div className="icon-box w-16 h-16 rounded-[1.25rem] bg-white/[0.03] border border-white/10 flex items-center justify-center text-4xl text-purple-400 shadow-xl">
                     {item.icon}
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-mono text-slate-600 uppercase tracking-widest mb-1">Index</p>
-                    <p className="text-sm font-bold text-white/20 group-hover:text-purple-500 transition-colors italic">0{i + 1}</p>
-                  </div>
+                  <p className="text-lg font-black text-white/10 italic font-mono">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
                 </div>
 
-                <h3 className="text-2xl font-bold text-white mb-4 tracking-tight group-hover:text-purple-400 transition-colors">
-                  {item.title}
-                </h3>
-                
-                <p className="text-gray-500 text-sm leading-relaxed mb-8 group-hover:text-gray-300 transition-colors">
-                  {item.desc}
-                </p>
+                <h3 className="text-3xl font-bold text-white mb-6">{item.title}</h3>
+                <p className="text-slate-500 flex-grow mb-10">{item.desc}</p>
 
-                <div className="pt-6 border-t border-white/5">
-                  <p className="text-[9px] font-mono text-slate-500 uppercase tracking-[0.2em] mb-2">Technical Stack</p>
-                  <p className="text-[11px] text-sky-400/80 font-medium">{item.stack}</p>
+                <div className="pt-8 border-t border-white/5">
+                  <p className="text-[10px] font-mono uppercase tracking-[0.4em] text-slate-600 mb-3">
+                    Engine_Core
+                  </p>
+                  <p className="text-xs text-sky-400 font-bold uppercase">
+                    {item.stack}
+                  </p>
                 </div>
               </div>
-              <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-purple-600 to-sky-500 w-0 group-hover:w-full transition-all duration-700" />
+
+              <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-gradient-to-r from-purple-600 via-sky-500 to-emerald-400 group-hover:w-full transition-all duration-1000" />
             </div>
           ))}
         </div>
 
-        {/* CTA Section */}
-        <div className="mt-32 text-center p-12 rounded-[40px] bg-white/[0.02] border border-white/5">
-          <h4 className="text-gray-500 font-mono text-xs uppercase tracking-[0.4em] mb-6">Ready to scale your next project?</h4>
-          <a href="#contact" className="group relative inline-flex items-center gap-4 text-white text-2xl font-black italic tracking-tighter">
-            <span className="relative z-10 group-hover:pr-4 transition-all uppercase">Initialize_Collaboration.exe</span>
-            <span className="w-12 h-0.5 bg-purple-500 group-hover:w-24 transition-all" />
+        {/* CTA */}
+        <div className="cta-box mt-40 text-center p-20 rounded-[4rem] border border-white/5">
+          <h4 className="text-slate-500 font-mono text-xs uppercase tracking-[0.6em] mb-10">
+            Initiating Connection Protocol...
+          </h4>
+          <a href="#contact" className="inline-flex items-center gap-6 text-white text-4xl font-black italic">
+            Initialize_Project.sh
+            <span className="w-16 h-1 bg-purple-500 rounded-full" />
           </a>
         </div>
       </div>

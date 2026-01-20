@@ -32,16 +32,19 @@ const Hero = () => {
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
-    // 1. Content entrance with blur and slide
-    tl.from(".hero-content > div, .hero-content h1, .hero-content h3, .hero-content p, .hero-btns", {
-      y: 80,
-      opacity: 0,
-      filter: "blur(15px)",
-      stagger: 0.15,
-      duration: 1.8,
-    });
+    // 1. Hero content entrance
+    tl.from(
+      ".hero-content > div, .hero-content h1, .hero-content h3, .hero-content p, .hero-btns",
+      {
+        y: 80,
+        opacity: 0,
+        filter: "blur(15px)",
+        stagger: 0.15,
+        duration: 1.8,
+      }
+    );
 
-    // 2. Rotate ONLY the outer dashed ring
+    // 2. Rotating outer dashed ring
     gsap.to(ringRef.current, {
       rotate: 360,
       duration: 25,
@@ -49,7 +52,7 @@ const Hero = () => {
       ease: "none",
     });
 
-    // 3. Gentle floating effect for the image section (translation only)
+    // 3. Floating image effect
     gsap.to(".floating-target", {
       y: -15,
       duration: 3,
@@ -58,9 +61,17 @@ const Hero = () => {
       ease: "power1.inOut",
     });
 
-    // 4. Infinite background code stream
-    gsap.fromTo(".stream-up", { y: 0 }, { y: "-50%", duration: 35, repeat: -1, ease: "none" });
-    gsap.fromTo(".stream-down", { y: "-50%" }, { y: 0, duration: 45, repeat: -1, ease: "none" });
+    // 4. Infinite code streams
+    gsap.fromTo(
+      ".stream-up",
+      { y: 0 },
+      { y: "-50%", duration: 35, repeat: -1, ease: "none" }
+    );
+    gsap.fromTo(
+      ".stream-down",
+      { y: "-50%" },
+      { y: 0, duration: 45, repeat: -1, ease: "none" }
+    );
 
     // 5. Pulsing background orbs
     gsap.to(".light-orb", {
@@ -73,22 +84,22 @@ const Hero = () => {
     });
   }, { scope: containerRef });
 
-  // Handle image overlay hover
+  // Profile hover
   const handleMouseEnter = () => {
-    gsap.to(profileOverlayRef.current, { 
-      opacity: 1, 
-      scale: 1, 
-      duration: 0.5, 
-      ease: "expo.out" 
+    gsap.to(profileOverlayRef.current, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.5,
+      ease: "expo.out",
     });
   };
 
   const handleMouseLeave = () => {
-    gsap.to(profileOverlayRef.current, { 
-      opacity: 0, 
-      scale: 0.85, 
-      duration: 0.4, 
-      ease: "power2.in" 
+    gsap.to(profileOverlayRef.current, {
+      opacity: 0,
+      scale: 0.85,
+      duration: 0.4,
+      ease: "power2.in",
     });
   };
 
@@ -96,6 +107,7 @@ const Hero = () => {
   useEffect(() => {
     let timeout;
     const fullText = typingTexts[currentText].text;
+
     if (typing) {
       if (displayText.length < fullText.length) {
         timeout = setTimeout(() => {
@@ -114,10 +126,11 @@ const Hero = () => {
         setCurrentText((prev) => (prev + 1) % typingTexts.length);
       }
     }
+
     return () => clearTimeout(timeout);
   }, [displayText, typing, currentText]);
 
-  // Cursor blink logic
+  // Cursor blink
   useEffect(() => {
     const interval = setInterval(() => setCursorVisible((v) => !v), 530);
     return () => clearInterval(interval);
@@ -136,6 +149,7 @@ const Hero = () => {
     >
       {/* --- BACKGROUND LAYER --- */}
       <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Radial Grid */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -144,6 +158,7 @@ const Hero = () => {
           }}
         />
 
+        {/* Code streams */}
         <div className="absolute inset-0 opacity-[0.06] flex justify-between px-10">
           <div className="stream-up font-['Fira_Code'] text-[10px] text-purple-500 space-y-20 py-10">
             {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((s, i) => (
@@ -157,6 +172,7 @@ const Hero = () => {
           </div>
         </div>
 
+        {/* Background Orbs */}
         <div className="light-orb absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full" />
         <div className="light-orb absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full" />
       </div>
@@ -166,38 +182,34 @@ const Hero = () => {
         
         {/* Profile Section */}
         <div className="floating-target relative w-[240px] h-[240px] md:w-[320px] md:h-[320px] mb-12 flex items-center justify-center">
-            
-            {/* Outer Rotating Dash Ring - Only this rotates */}
-            <div
-              ref={ringRef}
-              className="absolute inset-0 rounded-full border border-dashed border-white/10 p-4"
-            />
+          {/* Rotating Dashed Ring */}
+          <div ref={ringRef} className="absolute inset-0 rounded-full border border-dashed border-white/10 p-4" />
 
-            {/* Static Image Wrapper - Rotation won't affect this */}
-            <div
-              className="relative w-[200px] h-[200px] md:w-[260px] md:h-[260px] rounded-full p-[2px] bg-gradient-to-tr from-purple-600 via-sky-400 to-emerald-400 animate-gradient-xy shadow-[0_0_50px_rgba(168,85,247,0.2)] z-10 cursor-pointer group"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="w-full h-full rounded-full bg-[#020205] overflow-hidden border-[6px] border-[#020205]">
-                <img
-                  src="this.png" 
-                  alt="Shihab"
-                  className="w-full h-full object-cover scale-110 group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-
-              {/* Hover Overlay */}
-              <div
-                ref={profileOverlayRef}
-                className="absolute inset-0 bg-[#0a0a0c]/90 backdrop-blur-md rounded-full flex flex-col items-center justify-center border border-white/10 opacity-0 scale-85 pointer-events-none z-20"
-              >
-                 <span className="text-[10px] tracking-[0.5em] text-white/40 mb-2 font-mono uppercase">System Ready</span>
-                 <p className="font-['Fira_Code'] text-xs font-black tracking-widest text-purple-400 uppercase">
-                  MERN_ENGINEER
-                </p>
-              </div>
+          {/* Static Image */}
+          <div
+            className="relative w-[200px] h-[200px] md:w-[260px] md:h-[260px] rounded-full p-[2px] bg-gradient-to-tr from-purple-600 via-sky-400 to-emerald-400 animate-gradient-xy shadow-[0_0_50px_rgba(168,85,247,0.2)] z-10 cursor-pointer group"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="w-full h-full rounded-full bg-[#020205] overflow-hidden border-[6px] border-[#020205]">
+              <img
+                src="this.png"
+                alt="Shihab"
+                className="w-full h-full object-cover scale-110 group-hover:scale-105 transition-transform duration-700"
+              />
             </div>
+
+            {/* Hover Overlay */}
+            <div
+              ref={profileOverlayRef}
+              className="absolute inset-0 bg-[#0a0a0c]/90 backdrop-blur-md rounded-full flex flex-col items-center justify-center border border-white/10 opacity-0 scale-85 pointer-events-none z-20"
+            >
+              <span className="text-[10px] tracking-[0.5em] text-white/40 mb-2 font-mono uppercase">System Ready</span>
+              <p className="font-['Fira_Code'] text-xs font-black tracking-widest text-purple-400 uppercase">
+                MERN_ENGINEER
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Text Section */}
@@ -221,10 +233,17 @@ const Hero = () => {
           </div>
 
           <div className="inline-block py-2 px-6 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mb-12">
-             <p className="text-slate-400 font-['Fira_Code'] text-xs md:text-sm tracking-tighter">
+            <p className="text-slate-400 font-['Fira_Code'] text-xs md:text-sm tracking-tighter">
               <span className="text-purple-400">const</span> status = <span className="text-sky-400">"{`Building scalable systems`}"</span>;
-             </p>
+            </p>
           </div>
+        </div>
+
+        {/* About Me Section */}
+        <div className="text-center max-w-3xl mb-12 px-4">
+          <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+            I’m a passionate Full Stack Developer specializing in building high-performance web applications with MERN stack. I enjoy creating interactive UI, seamless UX, and bringing complex systems to life with clean, maintainable code. Always exploring new tech to deliver the best solutions.
+          </p>
         </div>
 
         {/* Action Buttons */}

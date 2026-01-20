@@ -7,8 +7,8 @@ const Loading = ({ onFinish }) => {
   const containerRef = useRef(null);
   const codeStreamUpRef = useRef(null);
   const codeStreamDownRef = useRef(null);
-  const progressRef = useRef(null);
   const contentRef = useRef(null);
+  const auraRef = useRef(null);
 
   const codeSnippets = [
     "const app = express();",
@@ -24,152 +24,162 @@ const Loading = ({ onFinish }) => {
   ];
 
   useGSAP(() => {
+    // Highly optimized total duration (2 seconds)
+    const totalDuration = 2;
+
     const tl = gsap.timeline({
       onComplete: () => {
-        // Exit Animation
         gsap.to(containerRef.current, {
           yPercent: -100,
-          duration: 1.2,
-          ease: "power4.inOut",
+          duration: 1,
+          ease: "expo.inOut",
           onComplete: onFinish
         });
       }
     });
 
-    // 1. Background Code Streams
+    // 1. Dynamic Background Streams
     gsap.to(codeStreamUpRef.current, {
-      y: -500,
-      duration: 20,
+      y: -700,
+      duration: 15,
       repeat: -1,
       ease: "none",
+      force3D: true
     });
 
     gsap.to(codeStreamDownRef.current, {
-      y: 500,
-      duration: 22,
+      y: 700,
+      duration: 17,
       repeat: -1,
       ease: "none",
+      force3D: true
     });
 
-    // 2. Initial Content Reveal
-    tl.from(contentRef.current, {
-      opacity: 0,
-      scale: 0.9,
-      duration: 1,
-      ease: "power3.out"
+    // 2. Aura Pulse Animation
+    gsap.to(auraRef.current, {
+      scale: 1.2,
+      opacity: 0.6,
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
     });
 
-    // 3. Counter Animation (Real-time percentage)
+    // 3. Fast & Smooth Counter
     const counterObj = { value: 0 };
     tl.to(counterObj, {
       value: 100,
-      duration: 3, // Total loading time
-      ease: "power2.inOut",
+      duration: totalDuration,
+      ease: "expo.out",
       onUpdate: () => {
         setPercent(Math.floor(counterObj.value));
       }
-    }, "-=0.5");
-
-    // 4. Subtle Pulse on Branding
-    gsap.to(".loading-brand", {
-      opacity: 0.7,
-      repeat: -1,
-      yoyo: true,
-      duration: 0.8,
-      ease: "power1.inOut"
     });
+
+    // 4. Content Reveal
+    tl.fromTo(contentRef.current, 
+      { opacity: 0, scale: 0.9, filter: "blur(15px)" },
+      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out" },
+      0
+    );
 
   }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-[#020203] overflow-hidden"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#010102] overflow-hidden select-none"
     >
-      {/* BACKGROUND CODE OVERLAY */}
-      <div className="absolute inset-0 opacity-[0.15] pointer-events-none flex justify-between px-4 overflow-hidden">
-        <div 
-          ref={codeStreamUpRef}
-          className="flex flex-col gap-8 font-mono text-[10px] md:text-[12px] text-sky-500 whitespace-nowrap"
-        >
-          {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((snippet, i) => (
-            <span key={i} className="block">{snippet}</span>
-          ))}
-        </div>
+      {/* LUXURY BACKGROUND EFFECTS */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0a0a15_0%,#010102_100%)]" />
+      <div ref={auraRef} className="absolute w-[500px] h-[500px] bg-sky-500/10 blur-[150px] rounded-full pointer-events-none" />
+      
+      {/* SCANLINES & GRAIN */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.05] z-50 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.2)_50%)] bg-[length:100%_2px] z-40" />
 
-        <div 
-          ref={codeStreamDownRef}
-          className="flex flex-col gap-8 font-mono text-[10px] md:text-[12px] text-emerald-500 text-right whitespace-nowrap"
-        >
-          {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((snippet, i) => (
-            <span key={i} className="block">{snippet}</span>
-          ))}
+      {/* CODE STREAMS */}
+      <div className="absolute inset-0 opacity-[0.06] pointer-events-none flex justify-between px-12 overflow-hidden">
+        <div ref={codeStreamUpRef} className="flex flex-col gap-12 font-mono text-[10px] text-sky-400/80 italic">
+          {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
+        </div>
+        <div ref={codeStreamDownRef} className="flex flex-col gap-12 font-mono text-[10px] text-emerald-400/80 text-right italic">
+          {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
         </div>
       </div>
-
-      {/* VIRTUAL GRID LAYER */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.04]" 
-           style={{ 
-             backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', 
-             backgroundSize: '50px 50px' 
-           }} 
-      />
 
       {/* CENTER CONTENT */}
-      <div ref={contentRef} className="relative z-50 flex flex-col items-center px-6 w-full max-w-lg">
+      <div ref={contentRef} className="relative z-[60] flex flex-col items-center px-6 w-full max-w-3xl">
         
-        {/* CLI Terminal Tag */}
-        <div className="mb-8 font-mono text-[10px] text-sky-400 bg-sky-400/10 px-4 py-1.5 border border-sky-400/20 rounded-full tracking-wider shadow-[0_0_20px_rgba(56,189,248,0.1)]">
-          $ system.initialize_mern_stack()
+        {/* Terminal Indicator */}
+        <div className="mb-12 flex items-center gap-3 font-mono text-[9px] text-sky-400 border border-sky-400/20 bg-sky-400/5 px-5 py-2 rounded-full tracking-[0.3em] uppercase backdrop-blur-xl">
+          <span className="flex h-2 w-2 relative">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+          </span>
+          executing.portfolio_v2.bin
         </div>
 
-        {/* Branding Section */}
-        <div className="relative text-center mb-16">
-          <h1 className="loading-brand text-white text-5xl md:text-7xl font-black tracking-tighter">
-            MERN <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-500 italic">STACK</span>
+        {/* Branding */}
+        <div className="relative text-center mb-24">
+          <h1 className="loading-brand text-white text-7xl md:text-[10rem] font-[800] tracking-tighter leading-none font-['Syne']">
+            MERN <span className="text-transparent bg-clip-text bg-gradient-to-tr from-sky-400 via-indigo-500 to-emerald-400 italic">STACK</span>
           </h1>
-          
-          <div className="flex items-center justify-center gap-3 mt-6">
-             <span className="text-slate-500 font-mono text-[10px] md:text-xs uppercase tracking-[0.5em]">Architecting_Digital_Future</span>
-             <div className="w-2 h-4 bg-emerald-500 animate-pulse shadow-[0_0_15px_#10b981]" />
-          </div>
+          <p className="mt-6 text-slate-500 font-mono text-[10px] md:text-xs uppercase tracking-[0.8em] font-light">
+            Architecting &nbsp; Digital &nbsp; Excellence
+          </p>
         </div>
 
-        {/* PROGRESS BOX */}
-        <div className="w-full max-w-[300px] md:max-w-sm">
-          <div className="flex justify-between items-end mb-3 font-mono">
-            <div className="flex flex-col">
-                <span className="text-[8px] text-slate-600 uppercase tracking-widest">Status</span>
-                <span className="text-[10px] text-slate-400 tracking-wider">
-                    {percent < 100 ? "OPTIMIZING_RESOURCES..." : "SYSTEM_READY"}
+        {/* PROGRESS SYSTEM */}
+        <div className="w-full max-w-[350px] md:max-w-lg">
+          <div className="flex justify-between items-end mb-5 font-mono">
+            <div className="flex flex-col gap-1">
+                <span className="text-[8px] text-sky-500/40 uppercase tracking-[0.4em] font-bold">System Status</span>
+                <span className="text-[11px] text-slate-400 tracking-wider font-medium uppercase italic">
+                    {percent < 100 ? "Syncing_Environment..." : "Ready_to_Deploy"}
                 </span>
             </div>
-            <span className="text-sky-400 font-bold text-xl">{percent}%</span>
+            <div className="flex items-baseline gap-1">
+                <span className="text-white font-[900] text-4xl tracking-tighter">{percent}</span>
+                <span className="text-sky-500 text-xs font-bold">%</span>
+            </div>
           </div>
 
-          {/* Progress Bar Container */}
-          <div className="h-[2px] w-full bg-white/5 rounded-full overflow-hidden backdrop-blur-sm relative">
-            {/* Animated Glow Track */}
+          {/* Luxury Progress Bar */}
+          <div className="h-[2px] w-full bg-white/5 rounded-full overflow-hidden backdrop-blur-3xl relative">
             <div 
-              ref={progressRef}
               style={{ width: `${percent}%` }}
-              className="h-full bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-500 shadow-[0_0_20px_rgba(56,189,248,0.6)] transition-all duration-150 ease-linear"
-            />
+              className="h-full bg-gradient-to-r from-sky-500 via-indigo-600 to-emerald-500 shadow-[0_0_30px_rgba(56,189,248,0.9)] transition-all duration-100 ease-out relative"
+            >
+                {/* Flowing Highlight */}
+                <div className="absolute top-0 right-0 h-full w-32 bg-gradient-to-r from-transparent via-white/30 to-transparent blur-md -skew-x-12 animate-[shimmer_1s_infinite]" />
+            </div>
           </div>
 
-          {/* Tech Badges */}
-          <div className="mt-8 flex justify-center gap-3">
-             {["MongoDB", "Express", "React", "Node"].map((tech) => (
-               <span key={tech} className="text-[8px] font-mono text-slate-500 border border-white/5 px-2.5 py-1 rounded-sm bg-white/[0.02] tracking-widest uppercase">
-                {tech}
-               </span>
-             ))}
+          {/* Metadata Badges */}
+          <div className="mt-16 flex justify-between items-center opacity-30">
+             <div className="flex gap-6">
+                {["DATABASE", "SECURITY", "UX_CORE"].map((m) => (
+                    <div key={m} className="flex items-center gap-2">
+                        <div className={`w-1 h-1 rounded-full ${percent > 50 ? 'bg-emerald-400' : 'bg-slate-700'}`} />
+                        <span className="text-[7px] font-mono text-white tracking-[0.2em]">{m}</span>
+                    </div>
+                ))}
+             </div>
+             <span className="text-[7px] font-mono text-white tracking-[0.3em] font-bold uppercase">Port: 3000</span>
           </div>
         </div>
       </div>
 
-      {/* SCANLINE EFFECT */}
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] z-[100]" />
+      {/* EDGE DECORATIONS */}
+      <div className="absolute inset-10 border border-white/[0.03] pointer-events-none rounded-[3rem]" />
+      
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%) skewX(-12deg); }
+          100% { transform: translateX(200%) skewX(-12deg); }
+        }
+      `}</style>
     </div>
   );
 };
