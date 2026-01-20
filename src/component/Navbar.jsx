@@ -158,9 +158,9 @@ const Navbar = () => {
               <a
                 href="/cv.pdf"
                 download
-                className="text-[10px] font-bold tracking-[0.2em] text-white/50 hover:text-white transition-colors"
+                className="text-[15px] font-bold border border-b-cyan-500 tracking-[0.2em] text-white/50 hover:text-white transition-colors"
               >
-                RESUME_PDF
+                Click Here To Download CV
               </a>
               <p className="text-[8px] text-white/20 mt-2 font-mono uppercase">© 2026 Shihab</p>
           </div>

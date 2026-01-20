@@ -3,7 +3,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-// Register ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
 const skills = [
@@ -35,51 +34,49 @@ const Skills = () => {
   const [counters, setCounters] = useState(skills.map(() => 0));
 
   useGSAP(() => {
-    // 1. Background Animation (Code Streams)
-    gsap.to(".stream-up-skills", { y: -500, duration: 40, repeat: -1, ease: "none" });
-    gsap.to(".stream-down-skills", { y: 500, duration: 35, repeat: -1, ease: "none" });
+    // 1. Background Code Streams (Hardware Accelerated)
+    gsap.to(".stream-up-skills", { y: -500, duration: 40, repeat: -1, ease: "none", force3D: true });
+    gsap.to(".stream-down-skills", { y: 500, duration: 35, repeat: -1, ease: "none", force3D: true });
 
-    // 2. Title & Header Animation
+    // 2. Title Animation
     gsap.from(".skills-header", {
       scrollTrigger: {
         trigger: ".skills-header",
         start: "top 90%",
-        toggleActions: "restart pause resume reverse"
+        toggleActions: "play none none reverse"
       },
       opacity: 0,
-      y: 50,
-      filter: "blur(10px)",
+      y: 30,
       duration: 1.2,
-      ease: "expo.out"
+      ease: "power4.out"
     });
 
-    // 3. Luxury Grid Animation
+    // 3. Optimized Luxury Grid Animation
     const cards = gsap.utils.toArray(".skill-item");
     cards.forEach((card, idx) => {
-      // Create individual timelines for each card to handle re-animation properly
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: card,
-          start: "top 85%",
-          toggleActions: "restart none none reverse", // Restart on scroll down, reverse on scroll up
+          start: "top 92%",
+          toggleActions: "play none none reverse",
         }
       });
 
       tl.from(card, {
         opacity: 0,
-        scale: 0.9,
-        y: 40,
-        rotateX: -15,
+        scale: 0.96,
+        y: 25,
+        rotateX: -10,
         duration: 0.8,
-        ease: "power4.out"
+        ease: "expo.out",
+        force3D: true
       });
 
-      // Animate the counter value
       let target = { val: 0 };
       tl.to(target, {
         val: skills[idx].level,
         duration: 1.5,
-        ease: "power2.inOut",
+        ease: "power3.out",
         onUpdate: () => {
           setCounters(prev => {
             const next = [...prev];
@@ -87,7 +84,7 @@ const Skills = () => {
             return next;
           });
         }
-      }, "-=0.4");
+      }, "-=0.5");
     });
 
     // 4. Terminal Reveal
@@ -95,30 +92,28 @@ const Skills = () => {
       scrollTrigger: {
         trigger: ".terminal-box",
         start: "top 95%",
-        toggleActions: "restart none none reverse"
       },
       opacity: 0,
-      y: 30,
-      scale: 0.98,
+      y: 20,
       duration: 1,
-      ease: "back.out(1.2)"
+      ease: "power2.out"
     });
 
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="py-24 relative overflow-hidden bg-[#020203]" id="skills">
+    <section ref={sectionRef} className="py-24 relative overflow-hidden bg-[#050507]" id="skills">
       
-      {/* --- BACKGROUND ANIMATION LAYER (Unchanged) --- */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.03]" 
-             style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '50px 50px' }} 
+      {/* Background Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none">
+        <div className="absolute inset-0 opacity-[0.02]" 
+             style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
         />
-        <div className="absolute inset-0 opacity-[0.07] flex justify-around">
-          <div className="stream-up-skills flex flex-col gap-12 font-mono text-[10px] text-purple-500/40">
+        <div className="absolute inset-0 opacity-[0.05] flex justify-around">
+          <div className="stream-up-skills flex flex-col gap-16 font-mono text-[9px] text-emerald-500/40">
             {[...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
           </div>
-          <div className="stream-down-skills hidden md:flex flex-col gap-12 font-mono text-[10px] text-sky-500/40">
+          <div className="stream-down-skills hidden md:flex flex-col gap-16 font-mono text-[9px] text-purple-500/40">
             {[...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
           </div>
         </div>
@@ -126,90 +121,90 @@ const Skills = () => {
 
       <div className="relative z-10 container mx-auto px-6 max-w-7xl">
         <div className="skills-header text-center mb-20">
-          <div className="inline-block mb-3 font-mono text-[10px] text-emerald-500 bg-emerald-500/10 px-4 py-1.5 border border-emerald-500/20 rounded tracking-[0.2em] uppercase">
-            // system.initialize_skills()
+          <div className="inline-block mb-4 font-mono text-[10px] text-emerald-500 bg-emerald-500/5 px-4 py-1.5 border border-emerald-500/20 rounded-full tracking-[0.3em] uppercase">
+            // Core_System_Initialize
           </div>
-          <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter">
-            TECH <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-sky-500 to-indigo-500 italic">ARSENAL</span>
+          <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase">
+            Tech <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-sky-500 italic">Arsenal</span>
           </h2>
         </div>
 
-        <div className="skills-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {skills.map((skill, idx) => (
             <div 
               key={skill.name} 
-              className="skill-item group relative p-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-sm hover:border-white/20 transition-all duration-500"
-              style={{ perspective: "1000px" }}
+              className="skill-item group relative p-8 rounded-[2rem] bg-white/[0.01] border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden"
+              style={{ perspective: "1200px" }}
             >
-              {/* Luxury Glow Effect on Hover */}
+              {/* Luxury Hover Glow */}
               <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
-                style={{ boxShadow: `0 0 40px -10px ${skill.glow}` }}
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                style={{ background: `radial-gradient(circle at center, ${skill.glow} 0%, transparent 70%)` }}
               />
 
               <div className="relative z-10">
-                <div className="flex justify-between items-center mb-6">
-                  <div className="flex flex-col">
-                    <span className="font-mono text-[9px] text-emerald-500/60 mb-1 tracking-widest">
-                      MODULE_{idx < 9 ? `0${idx + 1}` : idx + 1}
-                    </span>
-                    <h3 className="text-lg font-bold text-white tracking-tight uppercase font-mono group-hover:text-emerald-400 transition-colors">
+                <div className="flex justify-between items-start mb-10">
+                  <div className="space-y-1">
+                    <p className="font-mono text-[9px] text-emerald-500/50 tracking-widest uppercase">
+                      Module_{idx < 9 ? `0${idx + 1}` : idx + 1}
+                    </p>
+                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors duration-300 font-mono tracking-tight">
                       {skill.name}
                     </h3>
                   </div>
                   <div className="text-right">
-                    <span className="block font-mono text-[10px] text-slate-500 uppercase">Efficiency</span>
-                    <span className="text-xl font-black text-white">{counters[idx]}%</span>
+                    <span className="text-2xl font-black text-white/90 font-mono tracking-tighter">
+                      {counters[idx]}%
+                    </span>
                   </div>
                 </div>
 
-                {/* Deluxe Progress Bar Container */}
-                <div className="relative h-[6px] w-full bg-white/5 rounded-full overflow-hidden mb-6">
+                {/* Deluxe Progress Bar */}
+                <div className="relative h-[3px] w-full bg-white/5 rounded-full mb-8">
                   <div
                     style={{ width: `${counters[idx]}%` }}
-                    className={`h-full bg-gradient-to-r ${skill.color} relative shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all duration-150 ease-out`}
+                    className={`h-full bg-gradient-to-r ${skill.color} relative transition-all duration-300 ease-out`}
                   >
                     <div className="scan-line absolute inset-0 w-full bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                   </div>
                 </div>
 
-                {/* Animated Data Particles */}
-                <div className="flex justify-between items-center px-1">
-                  <div className="flex gap-1">
-                    {[...Array(6)].map((_, i) => (
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-1.5">
+                    {[...Array(5)].map((_, i) => (
                       <div 
                         key={i} 
-                        className={`w-1 h-1 rounded-full transition-all duration-500 ${i * 15 < counters[idx] ? 'bg-emerald-500' : 'bg-white/10'}`} 
+                        className={`w-1.5 h-1.5 rounded-full transition-all duration-700 ${i * 20 < counters[idx] ? 'bg-emerald-500' : 'bg-white/10'}`} 
                       />
                     ))}
                   </div>
-                  <div className="text-[9px] font-mono text-slate-600 group-hover:text-slate-400">
-                    STATUS: {counters[idx] > 70 ? 'OPTIMIZED' : 'STABLE'}
-                  </div>
+                  <span className="text-[10px] font-mono text-slate-500 group-hover:text-emerald-500/70 transition-colors uppercase tracking-widest">
+                    {counters[idx] > 80 ? 'Optimized' : 'Stable'}
+                  </span>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Footer Luxury Terminal */}
-        <div className="terminal-box mt-24 max-w-4xl mx-auto overflow-hidden rounded-xl border border-white/5 bg-[#050508] shadow-2xl">
-          <div className="flex items-center justify-between px-4 py-2 bg-white/[0.03] border-b border-white/5">
-            <div className="flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
+        {/* Diagnostic Terminal */}
+        <div className="terminal-box mt-24 max-w-3xl mx-auto rounded-2xl border border-white/5 bg-black/40 backdrop-blur-sm overflow-hidden shadow-2xl">
+          <div className="flex items-center justify-between px-6 py-3 bg-white/[0.02] border-b border-white/5">
+            <div className="flex gap-2">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/40" />
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/40" />
             </div>
-            <span className="font-mono text-[9px] text-slate-500 tracking-widest uppercase italic">Core_Diagnostics_Log</span>
+            <span className="font-mono text-[9px] text-slate-500 tracking-tighter uppercase italic">Shihab_Core_Log_v2.1</span>
           </div>
-          <div className="p-6 font-mono text-[11px] leading-relaxed">
-            <div className="flex gap-3 mb-2">
-              <span className="text-emerald-500 font-bold tracking-tighter">[SUCCESS]</span>
-              <span className="text-slate-400">Deployment successful. {skills.length} modules loaded into global namespace.</span>
+          <div className="p-8 font-mono text-[11px] leading-relaxed">
+            <div className="flex gap-4 mb-3">
+              <span className="text-emerald-500 font-bold">[SUCCESS]</span>
+              <span className="text-slate-400">All modules synchronized. System running at peak capacity.</span>
             </div>
-            <div className="flex gap-3">
-              <span className="text-sky-500 font-bold tracking-tighter">[READY]</span>
-              <span className="text-slate-400 italic">Shihab is prepared for next-gen scalable development. System standing by.</span>
+            <div className="flex gap-4">
+              <span className="text-sky-500 font-bold">[READY]</span>
+              <span className="text-slate-400 italic">Awaiting new challenge deployment. Standing by...</span>
             </div>
           </div>
         </div>
@@ -217,18 +212,24 @@ const Skills = () => {
 
       <style jsx>{`
         .scan-line {
-          animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+          animation: scan 3s linear infinite;
         }
         @keyframes scan {
           from { transform: translateX(-100%); }
-          to { transform: translateX(250%); }
+          to { transform: translateX(300%); }
         }
         .skill-item {
+          will-change: transform, opacity;
           transform-style: preserve-3d;
-          transition: transform 0.5s cubic-bezier(0.2, 0, 0.2, 1);
         }
         .skill-item:hover {
-          transform: translateY(-5px) rotateX(5deg);
+          transform: translateY(-8px) rotateX(4deg);
+        }
+        @media (max-width: 768px) {
+          .skill-item {
+            backdrop-filter: none !important;
+            background: rgba(15, 15, 20, 0.95) !important;
+          }
         }
       `}</style>
     </section>
