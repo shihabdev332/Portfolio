@@ -6,3 +6,7 @@ background-color: #0F0F13;
 
 
 }
+
+
+.nav-active { color: white !important; }
+.nav-active span { width: 100% !important; }
