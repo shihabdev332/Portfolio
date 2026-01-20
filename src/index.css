@@ -1,49 +1,48 @@
 @import "tailwindcss";
 
-
+/* ---------------- Base Styles ---------------- */
 body {
   background-color: #0F0F13;
-  color: white;
+  color: #ffffff;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  font-family: 'Inter', sans-serif;
 }
 
-/* --- Navigation Active State --- */
-.nav-active { 
-  color: white !important; 
+/* ---------------- Navigation Active State ---------------- */
+.nav-active {
+  color: #ffffff !important;
   opacity: 1 !important;
 }
 
-.nav-active span { 
-  width: 100% !important; 
+.nav-active span {
+  width: 100% !important;
 }
 
-/* --- GSAP & Performance Optimizations --- */
-
-
-.service-card, .nav-item, .hero-content {
+/* ---------------- GSAP & Performance Optimizations ---------------- */
+.service-card,
+.nav-item,
+.hero-content {
   will-change: transform, opacity;
   backface-visibility: hidden;
-  transform: translateZ(0); 
+  transform: translateZ(0);
+  perspective: 1000px;
 }
 
-/* --- Mobile Optimization (Performance Fix) --- */
+/* ---------------- Mobile Optimization (Performance Fix) ---------------- */
 @media (max-width: 768px) {
- 
-  .service-card, .navbar-glass {
+  .service-card,
+  .navbar-glass {
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
-    background-color: rgba(10, 10, 12, 0.95) !important; 
-  }
-
-
-  .service-card {
-    shadow: none !important;
+    background-color: rgba(10, 10, 12, 0.95) !important;
+    box-shadow: none !important; /* fixed from shadow -> box-shadow */
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
   }
 }
 
-/* --- Custom Utilities --- */
+/* ---------------- Custom Utilities ---------------- */
+/* Hide Scrollbar */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -56,5 +55,55 @@ body {
 /* Text Selection Color */
 ::selection {
   background-color: rgba(168, 85, 247, 0.3);
-  color: #fff;
+  color: #ffffff;
+}
+
+/* ---------------- Glow & Hover Enhancements ---------------- */
+.glow-layer {
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.service-card:hover .glow-layer {
+  opacity: 0.6;
+  transform: scale(1.8);
+}
+
+/* ---------------- Gradient Bars (CTA / Card Hover) ---------------- */
+.service-card::after,
+.cta-box::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    #a855f7,
+    #0ea5e9,
+    #22c55e
+  );
+  transition: width 1s ease;
+}
+
+.service-card:hover::after {
+  width: 100%;
+}
+
+/* ---------------- Links & Buttons ---------------- */
+a {
+  text-decoration: none;
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
+a:hover {
+  color: #a855f7;
+}
+
+/* ---------------- Responsive Text Fixes ---------------- */
+@media (max-width: 1024px) {
+  h1, h2, h3, h4 {
+    line-height: 1.2 !important;
+  }
 }

@@ -1,7 +1,6 @@
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 
 import {
   HiUserGroup,
@@ -42,9 +41,10 @@ const Services = () => {
     []
   );
 
-  useGSAP(
-    () => {
-      /* -------- Background Streams -------- */
+  // ------------------- GSAP Animations -------------------
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Background streams
       gsap.to(".code-stream-up", {
         y: -500,
         duration: 35,
@@ -61,11 +61,12 @@ const Services = () => {
         force3D: true,
       });
 
-      /* -------- Header -------- */
-      gsap.from(".srv-header-item", {
+      // Header items
+      gsap.from(gsap.utils.toArray(".srv-header-item"), {
         scrollTrigger: {
           trigger: ".services-header",
           start: "top 95%",
+          invalidateOnRefresh: true,
         },
         opacity: 0,
         y: 40,
@@ -74,11 +75,12 @@ const Services = () => {
         ease: "power4.out",
       });
 
-      /* -------- Cards -------- */
-      gsap.from(".service-card", {
+      // Service cards
+      gsap.from(gsap.utils.toArray(".service-card"), {
         scrollTrigger: {
           trigger: ".services-grid",
           start: "top 85%",
+          invalidateOnRefresh: true,
         },
         opacity: 0,
         y: 60,
@@ -86,28 +88,32 @@ const Services = () => {
         stagger: 0.08,
         duration: 1.4,
         ease: "expo.out",
-        clearProps: "all",
+        clearProps: "transform,opacity",
       });
 
-      /* -------- CTA -------- */
+      // CTA
       gsap.from(".cta-box", {
         scrollTrigger: {
           trigger: ".cta-box",
           start: "top 90%",
+          invalidateOnRefresh: true,
         },
         opacity: 0,
         y: 30,
         duration: 1.2,
         ease: "power3.out",
       });
-    },
-    { scope: containerRef }
-  );
 
-  /* ---------- Hover (GPU SAFE) ---------- */
+      // Refresh ScrollTrigger
+      ScrollTrigger.refresh();
+    }, containerRef);
+
+    return () => ctx.revert(); // Cleanup
+  }, []);
+
+  // ------------------- Hover Effects -------------------
   const onEnter = (e) => {
     if (window.matchMedia("(hover: none)").matches) return;
-
     const card = e.currentTarget;
     gsap.killTweensOf(card);
 
@@ -162,6 +168,7 @@ const Services = () => {
     });
   };
 
+  // ------------------- JSX -------------------
   return (
     <section
       ref={containerRef}
