@@ -89,7 +89,7 @@ const Navbar = () => {
         {/* DESKTOP NAV */}
         <ul className="hidden md:flex items-center gap-12">
           {navItems.map(({ id, text, to }) => (
-            <li key={id} className="relative group overflow-hidden">
+            <li key={id} className="relative group overflow-hidden cursor-pointer">
               <Link
                 to={to}
                 smooth={true}
