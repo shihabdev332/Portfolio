@@ -47,7 +47,7 @@ const projects = [
     description:
       "End-to-end digital marketplace featuring secure payment processing and modular backend architecture for high-traffic stability.",
     image: "/client.png",
-    link: "https://digital-shop-front-end-ebkb.vercel.app/",
+    link: "https://digital-store-rj52.vercel.app",
     code: "https://github.com/shihabdev332/Digital-Shop-Front-end",
     tech: ["MERN Stack", "JWT Auth", "Stripe API", "MongoDB"],
     role: "Backend Architect",
