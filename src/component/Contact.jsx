@@ -170,7 +170,7 @@ const Contact = () => {
             <div className="contact-info-item">
               <button
                 onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}`, "_blank")}
-                className="group relative flex items-center gap-3 bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-xl font-bold text-xs uppercase transition-all active:scale-95"
+                className="group relative flex items-center gap-3 bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-xl font-bold text-xs uppercase transition-all active:scale-95 cursor-pointer"
               >
                 <FaWhatsapp size={20} />
                 <span>Initialize_WhatsApp</span>
@@ -209,7 +209,7 @@ const Contact = () => {
                     type="submit" disabled={isSending} 
                     className="w-full group relative bg-white text-black py-5 rounded-xl font-black text-[10px] tracking-widest uppercase hover:bg-purple-50 active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center"
                   >
-                    <div className="send-btn-inner flex items-center gap-2">
+                    <div className="send-btn-inner flex items-center gap-2 cursor-pointer">
                         {isSending ? (
                           <span className="flex gap-1">
                             {[0, 1, 2].map(i => <span key={i} className="w-1.5 h-1.5 bg-black rounded-full animate-bounce" style={{ animationDelay: `${i * 0.1}s` }} />)}
