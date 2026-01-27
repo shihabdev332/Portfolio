@@ -195,7 +195,7 @@ const Hero = () => {
               <img
                 src="this.png"
                 alt="Shihab"
-                className="w-full h-full object-cover mt-[25px] scale-110 group-hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover  scale-110 group-hover:scale-105 transition-transform duration-700"
               />
             </div>
 
