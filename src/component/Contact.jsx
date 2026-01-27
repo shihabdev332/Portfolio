@@ -207,9 +207,9 @@ const Contact = () => {
                   </div>
                   <button 
                     type="submit" disabled={isSending} 
-                    className="w-full group relative bg-white text-black py-5 rounded-xl font-black text-[10px] tracking-widest uppercase hover:bg-purple-50 active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center"
+                    className="w-full group relative bg-white text-black py-5 rounded-xl font-black text-[10px] tracking-widest uppercase hover:bg-purple-50 active:scale-[0.98] disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center"
                   >
-                    <div className="send-btn-inner flex items-center gap-2 cursor-pointer">
+                    <div className="send-btn-inner flex items-center gap-2 ">
                         {isSending ? (
                           <span className="flex gap-1">
                             {[0, 1, 2].map(i => <span key={i} className="w-1.5 h-1.5 bg-black rounded-full animate-bounce" style={{ animationDelay: `${i * 0.1}s` }} />)}
