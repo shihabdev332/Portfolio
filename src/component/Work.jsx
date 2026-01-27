@@ -60,7 +60,7 @@ const projects = [
     description:
       "Sophisticated administrative control panel for real-time inventory tracking and business intelligence with RBAC security.",
     image: "/admin.png",
-    link: "https://admin-panel-zeta-two-83.vercel.app/order",
+    link: "https://admin-panel-zeta-two-83.vercel.app/",
     code: "https://github.com/shihabdev332/Digital-shop-admin-panel",
     tech: ["React Query", "Chart.js", "Express", "Mongoose"],
     role: "System Designer",
