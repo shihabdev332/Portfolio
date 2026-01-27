@@ -101,7 +101,7 @@ const Footer = () => {
                </div>
                <button 
                   onClick={scrollToTop}
-                  className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-slate-400 hover:text-white transition-all flex items-center justify-center gap-2 text-xs font-bold"
+                  className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-slate-400 hover:text-white transition-all flex items-center justify-center gap-2 text-xs font-bold cursor-pointer"
                >
                   BACK_TO_TOP <FaArrowUp size={10} />
                </button>
