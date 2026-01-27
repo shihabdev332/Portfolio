@@ -33,7 +33,7 @@ const Contact = () => {
       formRef.current, 
       '8ywpr-7h67rHdyQV5'
     )
-    .then((result) => {
+    .then(() => {
       setIsSending(false);
       setIsSubmitted(true);
       
@@ -44,7 +44,7 @@ const Contact = () => {
       )
       .fromTo(".success-text", 
         { opacity: 0, y: 20 }, 
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.2 }, "-=0.3"
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, "-=0.3"
       );
 
       setTimeout(() => {
@@ -53,6 +53,7 @@ const Contact = () => {
         gsap.set(".send-btn-inner", { y: 0, opacity: 1 });
       }, 5000);
     }, (error) => {
+      console.error("Failed:", error.text);
       setIsSending(false);
       gsap.to(".send-btn-inner", { y: 0, opacity: 1, duration: 0.3 });
       alert("Transmission Error. Please check your connection.");
@@ -64,21 +65,33 @@ const Contact = () => {
   };
 
   useGSAP(() => {
-    xTo.current = gsap.quickTo(glowRef.current, "x", { duration: 1.2, ease: "power3" });
-    yTo.current = gsap.quickTo(glowRef.current, "y", { duration: 1.2, ease: "power3" });
+    // Optimized Mouse Follower Setup
+    xTo.current = gsap.quickTo(glowRef.current, "x", { duration: 0.8, ease: "power3" });
+    yTo.current = gsap.quickTo(glowRef.current, "y", { duration: 0.8, ease: "power3" });
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        start: "top 75%",
+        start: "top 70%",
         toggleActions: "play none none reverse",
       }
     });
 
-    tl.from(".contact-tag", { opacity: 0, x: -20, duration: 0.8, ease: "power2.out" })
-      .from(".contact-title", { opacity: 0, y: 40, skewY: 2, duration: 1, ease: "expo.out" }, "-=0.4")
-      .from(".contact-info-item", { opacity: 0, x: -20, stagger: 0.1, duration: 0.8, ease: "power2.out" }, "-=0.6")
-      .from(".contact-form-box", { opacity: 0, y: 60, duration: 1.2, ease: "power4.out" }, "-=1");
+    tl.from(".contact-tag", { opacity: 0, x: -30, duration: 0.8 })
+      .from(".contact-title", { opacity: 0, y: 50, skewY: 3, duration: 1, ease: "expo.out" }, "-=0.5")
+      .from(".contact-info-item", { 
+        opacity: 0, 
+        x: -20, 
+        stagger: 0.15, 
+        duration: 0.8, 
+        ease: "power2.out" 
+      }, "-=0.7")
+      .from(".contact-form-box", { 
+        opacity: 0, 
+        scale: 0.95, 
+        duration: 1.2, 
+        ease: "expo.out" 
+      }, "-=1");
 
   }, { scope: containerRef });
 
@@ -86,8 +99,8 @@ const Contact = () => {
     if (!glowRef.current) return;
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
-    const x = (clientX - innerWidth / 2) * 0.15;
-    const y = (clientY - innerHeight / 2) * 0.15;
+    const x = (clientX - innerWidth / 2) * 0.12;
+    const y = (clientY - innerHeight / 2) * 0.12;
     xTo.current(x);
     yTo.current(y);
   };
@@ -97,107 +110,119 @@ const Contact = () => {
       id="contact" 
       ref={containerRef} 
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen py-24 overflow-hidden bg-[#020105] text-white selection:bg-purple-500/30"
+      className="relative min-h-screen py-24 overflow-hidden bg-[#020105] text-white selection:bg-purple-500/40"
     >
-      {/* BACKGROUND LAYERS */}
+      {/* HIGH-PERFORMANCE BACKGROUND */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.03]" 
-             style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }} 
+        <div className="absolute inset-0 opacity-[0.04]" 
+             style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: "50px 50px" }} 
         />
-        <div ref={glowRef} className="absolute top-1/2 left-1/2 w-[800px] h-[800px] bg-purple-600/10 blur-[100px] rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform" />
+        <div ref={glowRef} className="absolute top-1/2 left-1/2 w-[700px] h-[700px] bg-gradient-to-r from-purple-600/20 to-blue-600/10 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform" />
+        <div className="absolute inset-0 opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start pt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           
-          {/* LEFT SIDE: INFO */}
-          <div className="flex flex-col h-full justify-center">
-            <h4 className="contact-tag font-mono text-emerald-400/80 tracking-[0.4em] mb-6 text-xs uppercase font-bold flex items-center gap-2">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              Connectivity_Hub
-            </h4>
-            
-            <h2 className="contact-title text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter mb-8 leading-[0.9]">
-              Let's <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-300 to-white italic pr-4">
-                Connect
-              </span>
-            </h2>
-            
-            <p className="contact-info-item text-slate-400 text-lg max-w-md mb-12 leading-relaxed font-light">
-              Currently architecting next-gen web solutions. Open for engineering collaborations. 
-              <span className="block mt-2 text-slate-500 text-sm font-mono"> // Typical response time: &lt; 2 hours</span>
-            </p>
+          {/* LEFT CONTENT */}
+          <div className="space-y-10">
+            <div>
+              <h4 className="contact-tag font-mono text-emerald-400 tracking-[0.4em] mb-6 text-xs uppercase font-bold flex items-center gap-3">
+                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-ping" />
+                Connectivity_Hub
+              </h4>
+              <h2 className="contact-title text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] mb-6">
+                Let's <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-300 to-white italic">
+                  Connect
+                </span>
+              </h2>
+              <p className="contact-info-item text-slate-400 text-lg max-w-md leading-relaxed">
+                Currently architecting next-gen web solutions. Open for engineering collaborations. 
+                <span className="block mt-3 text-slate-500 text-sm font-mono opacity-70">// Response_Latency: &lt; 120min</span>
+              </p>
+            </div>
 
-            <div className="space-y-6 mb-12">
+            <div className="space-y-4">
               {[
-                { icon: <FiMail />, label: "Direct_Line", value: "shihab.dev332@gmail.com", color: "text-sky-400", link: "mailto:shihab.dev332@gmail.com" },
-                { icon: <FiMapPin />, label: "Base_Station", value: "Dhaka, Bangladesh", color: "text-purple-400", link: "#" },
+                { icon: <FiMail />, label: "Direct_Line", value: "shihab.dev332@gmail.com", link: "mailto:shihab.dev332@gmail.com", color: "sky" },
+                { icon: <FiMapPin />, label: "Base_Station", value: "Dhaka, Bangladesh", link: "#", color: "purple" },
               ].map((method, idx) => (
                 <a 
                   key={idx} 
                   href={method.link}
-                  className="contact-info-item flex items-center gap-6 group p-4 rounded-2xl hover:bg-white/[0.03] transition-colors border border-transparent hover:border-white/5"
+                  className="contact-info-item flex items-center gap-6 group p-4 rounded-2xl bg-white/[0.01] hover:bg-white/[0.04] border border-white/5 transition-all duration-300"
                 >
-                  <div className={`w-14 h-14 rounded-xl bg-[#0a0a0f] border border-white/10 flex items-center justify-center text-xl transition-all duration-500 group-hover:scale-110 ${method.color}`}>
+                  <div className={`w-14 h-14 rounded-xl bg-black border border-white/10 flex items-center justify-center text-xl transition-transform group-hover:scale-110 text-${method.color}-400`}>
                     {method.icon}
                   </div>
                   <div>
-                    <p className="text-[9px] font-mono text-slate-500 uppercase tracking-[0.2em] mb-1">{method.label}</p>
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{method.label}</p>
                     <p className="text-xl text-white font-bold group-hover:text-purple-300 transition-colors">{method.value}</p>
                   </div>
                 </a>
               ))}
             </div>
 
-            {/* WHATSAPP BUTTON - RE-ADDED & OPTIMIZED */}
-            <div className="contact-info-item relative z-30 pt-4">
-                <button
+            <div className="contact-info-item relative z-50">
+              <button
                 onClick={() => window.open(`https://wa.me/${whatsappNumber.replace(/\D/g, '')}`, "_blank")}
-                className="whatsapp-btn group relative overflow-hidden bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-xl font-black tracking-widest text-xs flex items-center gap-3 transition-all active:scale-95 shadow-[0_0_30px_rgba(16,185,129,0.2)] hover:shadow-[0_0_50px_rgba(16,185,129,0.4)]"
-                >
-                <FaWhatsapp size={20} className="relative z-10" />
-                <span className="relative z-10">INITIALIZE_WHATSAPP</span>
-                <div className="absolute inset-0 bg-white/30 translate-x-[-100%] skew-x-[-15deg] group-hover:translate-x-[200%] transition-transform duration-700 ease-in-out" />
-                </button>
+                className="group relative flex items-center gap-4 bg-emerald-500 hover:bg-emerald-400 text-black px-10 py-5 rounded-2xl font-black tracking-widest text-xs transition-all active:scale-95 shadow-2xl overflow-hidden"
+              >
+                <FaWhatsapp size={22} className="relative z-10" />
+                <span className="relative z-10 uppercase">Initialize_WhatsApp</span>
+                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] skew-x-[-15deg] group-hover:translate-x-[200%] transition-transform duration-700 ease-in-out" />
+              </button>
             </div>
           </div>
 
-          {/* RIGHT SIDE: PREMIUM FORM */}
-          <div className="contact-form-box w-full">
-            <div className="relative bg-[#0a0a0f] backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-[2rem] shadow-2xl overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-[50px] rounded-full pointer-events-none" />
+          {/* RIGHT CONTENT: FORM */}
+          <div className="contact-form-box relative h-full">
+            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 p-8 md:p-12 rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.3)] relative overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-purple-600/20 blur-[60px] rounded-full" />
               
               {isSubmitted ? (
-                <div className="flex flex-col items-center text-center py-20 min-h-[400px] justify-center">
-                  <div className="success-icon w-24 h-24 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mb-8 border border-emerald-500/20">
-                    <FiCheckCircle size={40} />
+                <div className="flex flex-col items-center text-center py-20 min-h-[450px] justify-center space-y-6">
+                  <div className="success-icon w-28 h-28 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center border border-emerald-500/20 shadow-2xl">
+                    <FiCheckCircle size={50} />
                   </div>
-                  <h3 className="success-text text-3xl font-black text-white mb-3 uppercase tracking-tighter">Transmission Received</h3>
-                  <p className="success-text text-slate-400 font-mono text-sm">Data packet routed successfully.</p>
+                  <div className="space-y-2">
+                    <h3 className="success-text text-3xl font-black uppercase tracking-tighter">Transmission Received</h3>
+                    <p className="success-text text-slate-400 font-mono text-sm tracking-wide">Data packet routed successfully.</p>
+                  </div>
                 </div>
               ) : (
                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-8 relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="group space-y-2">
-                      <label className="text-[10px] font-mono text-slate-500 ml-1 uppercase tracking-widest group-focus-within:text-purple-400">Identification</label>
-                      <input required name="name" value={formData.name} onChange={handleChange} type="text" placeholder="John Doe" className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-all text-sm" />
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] ml-1">Identification</label>
+                      <input required name="name" value={formData.name} onChange={handleChange} type="text" placeholder="John Doe" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all text-sm outline-none" />
                     </div>
-                    <div className="group space-y-2">
-                      <label className="text-[10px] font-mono text-slate-500 ml-1 uppercase tracking-widest group-focus-within:text-purple-400">Return_Path</label>
-                      <input required name="email" value={formData.email} onChange={handleChange} type="email" placeholder="email@example.com" className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-all text-sm" />
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] ml-1">Return_Path</label>
+                      <input required name="email" value={formData.email} onChange={handleChange} type="email" placeholder="shihab@dev.com" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all text-sm outline-none" />
                     </div>
                   </div>
                   
-                  <div className="group space-y-2">
-                    <label className="text-[10px] font-mono text-slate-500 ml-1 uppercase tracking-widest group-focus-within:text-purple-400">Communication_Payload</label>
-                    <textarea required name="message" value={formData.message} onChange={handleChange} rows="5" placeholder="Describe your project..." className="w-full bg-white/[0.02] border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-all resize-none text-sm" />
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] ml-1">Communication_Payload</label>
+                    <textarea required name="message" value={formData.message} onChange={handleChange} rows="5" placeholder="Describe your project requirement..." className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all resize-none text-sm outline-none" />
                   </div>
 
-                  <button type="submit" disabled={isSending} className="w-full group relative overflow-hidden bg-white text-black py-5 rounded-xl font-black text-xs tracking-[0.2em] flex items-center justify-center gap-3 transition-all hover:bg-purple-50 disabled:opacity-70 shadow-xl">
+                  <button 
+                    type="submit" 
+                    disabled={isSending} 
+                    className="w-full group relative bg-white text-black py-6 rounded-2xl font-black text-[10px] tracking-[0.3em] uppercase transition-all hover:bg-purple-50 active:scale-[0.98] disabled:opacity-50 shadow-2xl flex items-center justify-center overflow-hidden"
+                  >
                     <div className="send-btn-inner relative z-10 flex items-center gap-3">
-                        {isSending ? "SENDING..." : (
-                          <>SEND_MESSAGE <FiSend className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></>
+                        {isSending ? (
+                          <span className="flex gap-1">
+                            <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
+                            <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.15s]" />
+                            <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce" />
+                          </span>
+                        ) : (
+                          <>Send_Message <FiSend className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></>
                         )}
                     </div>
                   </button>
