@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from "react";
+import React, { useState, useRef, memo, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -9,67 +9,91 @@ import emailjs from "@emailjs/browser";
 gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
-  const whatsappNumber = "+8801757288373";
+  // Constants
+  const WHATSAPP_NUMBER = "+8801757288373";
+  const SERVICE_ID = 'service_0mxeb79';
+  const TEMPLATE_ID = 'template_bmpqdrk';
+  const PUBLIC_KEY = '8ywpr-7h67rHdyQV5';
+
+  // Refs for DOM and GSAP
   const containerRef = useRef(null);
   const formRef = useRef(null);
   const glowRef = useRef(null);
-  
   const xTo = useRef();
   const yTo = useRef();
 
+  // State Management
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  // Optimized Form Submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSending(true);
 
+    // Initial Button Animation
     gsap.to(".send-btn-inner", { y: -20, opacity: 0, duration: 0.3 });
 
-    emailjs.sendForm(
-      'service_0mxeb79', 
-      'template_bmpqdrk', 
-      formRef.current, 
-      '8ywpr-7h67rHdyQV5'
-    )
-    .then(() => {
+    try {
+      await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY);
+      
       setIsSending(false);
       setIsSubmitted(true);
       
-      const tl = gsap.timeline();
-      tl.fromTo(".success-icon", 
-        { scale: 0, rotate: -180, filter: "blur(10px)" }, 
-        { scale: 1, rotate: 0, filter: "blur(0px)", duration: 0.8, ease: "back.out(2)" }
-      )
-      .fromTo(".success-text", 
-        { opacity: 0, y: 20 }, 
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, "-=0.3"
-      );
+      // Success Timeline
+      const successTimeline = gsap.timeline();
+      successTimeline
+        .fromTo(".success-icon", 
+          { scale: 0, rotate: -180, filter: "blur(10px)" }, 
+          { scale: 1, rotate: 0, filter: "blur(0px)", duration: 0.8, ease: "back.out(2)" }
+        )
+        .fromTo(".success-text", 
+          { opacity: 0, y: 20 }, 
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, "-=0.3"
+        );
 
+      // Reset Form after delay
       setTimeout(() => {
         setIsSubmitted(false);
         setFormData({ name: "", email: "", message: "" });
         gsap.set(".send-btn-inner", { y: 0, opacity: 1 });
       }, 5000);
-    }, (error) => {
-      console.error("Failed:", error.text);
+
+    } catch (error) {
+      console.error("EmailJS Error:", error);
       setIsSending(false);
       gsap.to(".send-btn-inner", { y: 0, opacity: 1, duration: 0.3 });
       alert("Transmission Error. Please check your connection.");
-    });
+    }
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // Memoized Mouse Interaction
+  const handleMouseMove = useCallback((e) => {
+    if (!xTo.current || !yTo.current) return;
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    
+    // Calculate relative movement
+    const moveX = (clientX - innerWidth / 2) * 0.12;
+    const moveY = (clientY - innerHeight / 2) * 0.12;
+    
+    xTo.current(moveX);
+    yTo.current(moveY);
+  }, []);
+
+  // GSAP Entrance Animations
   useGSAP(() => {
-    // Optimized Mouse Follower Setup
+    // Initialize quickTo for smoother performance
     xTo.current = gsap.quickTo(glowRef.current, "x", { duration: 0.8, ease: "power3" });
     yTo.current = gsap.quickTo(glowRef.current, "y", { duration: 0.8, ease: "power3" });
 
-    const tl = gsap.timeline({
+    const entranceTl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top 70%",
@@ -77,12 +101,13 @@ const Contact = () => {
       }
     });
 
-    tl.from(".contact-tag", { opacity: 0, x: -30, duration: 0.8 })
+    entranceTl
+      .from(".contact-tag", { opacity: 0, x: -30, duration: 0.8 })
       .from(".contact-title", { opacity: 0, y: 50, skewY: 3, duration: 1, ease: "expo.out" }, "-=0.5")
       .from(".contact-info-item", { 
         opacity: 0, 
         x: -20, 
-        stagger: 0.15, 
+        stagger: 0.1, 
         duration: 0.8, 
         ease: "power2.out" 
       }, "-=0.7")
@@ -95,16 +120,6 @@ const Contact = () => {
 
   }, { scope: containerRef });
 
-  const handleMouseMove = (e) => {
-    if (!glowRef.current) return;
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    const x = (clientX - innerWidth / 2) * 0.12;
-    const y = (clientY - innerHeight / 2) * 0.12;
-    xTo.current(x);
-    yTo.current(y);
-  };
-
   return (
     <section 
       id="contact" 
@@ -112,19 +127,23 @@ const Contact = () => {
       onMouseMove={handleMouseMove}
       className="relative min-h-screen py-24 overflow-hidden bg-[#020105] text-white selection:bg-purple-500/40"
     >
-      {/* HIGH-PERFORMANCE BACKGROUND */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.04]" 
-             style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: "50px 50px" }} 
+      {/* BACKGROUND ELEMENTS */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none">
+        <div 
+          className="absolute inset-0 opacity-[0.04]" 
+          style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: "50px 50px" }} 
         />
-        <div ref={glowRef} className="absolute top-1/2 left-1/2 w-[700px] h-[700px] bg-gradient-to-r from-purple-600/20 to-blue-600/10 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform" />
+        <div 
+          ref={glowRef} 
+          className="absolute top-1/2 left-1/2 w-[700px] h-[700px] bg-gradient-to-r from-purple-600/20 to-blue-600/10 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform" 
+        />
         <div className="absolute inset-0 opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           
-          {/* LEFT CONTENT */}
+          {/* LEFT CONTENT: INFO */}
           <div className="space-y-10">
             <div>
               <h4 className="contact-tag font-mono text-emerald-400 tracking-[0.4em] mb-6 text-xs uppercase font-bold flex items-center gap-3">
@@ -166,7 +185,7 @@ const Contact = () => {
 
             <div className="contact-info-item relative z-50">
               <button
-                onClick={() => window.open(`https://wa.me/${whatsappNumber.replace(/\D/g, '')}`, "_blank")}
+                onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}`, "_blank")}
                 className="group relative flex items-center gap-4 bg-emerald-500 hover:bg-emerald-400 text-black px-10 py-5 rounded-2xl font-black tracking-widest text-xs transition-all active:scale-95 shadow-2xl overflow-hidden"
               >
                 <FaWhatsapp size={22} className="relative z-10" />
@@ -194,19 +213,34 @@ const Contact = () => {
               ) : (
                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-8 relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] ml-1">Identification</label>
-                      <input required name="name" value={formData.name} onChange={handleChange} type="text" placeholder="John Doe" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all text-sm outline-none" />
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] ml-1">Return_Path</label>
-                      <input required name="email" value={formData.email} onChange={handleChange} type="email" placeholder="shihab@dev.com" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all text-sm outline-none" />
-                    </div>
+                    <InputField 
+                      label="Identification" 
+                      name="name" 
+                      placeholder="John Doe" 
+                      value={formData.name} 
+                      onChange={handleChange} 
+                    />
+                    <InputField 
+                      label="Return_Path" 
+                      name="email" 
+                      type="email" 
+                      placeholder="shihab@dev.com" 
+                      value={formData.email} 
+                      onChange={handleChange} 
+                    />
                   </div>
                   
                   <div className="space-y-3">
                     <label className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] ml-1">Communication_Payload</label>
-                    <textarea required name="message" value={formData.message} onChange={handleChange} rows="5" placeholder="Describe your project requirement..." className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all resize-none text-sm outline-none" />
+                    <textarea 
+                      required 
+                      name="message" 
+                      value={formData.message} 
+                      onChange={handleChange} 
+                      rows="5" 
+                      placeholder="Describe your project requirement..." 
+                      className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all resize-none text-sm outline-none" 
+                    />
                   </div>
 
                   <button 
@@ -217,9 +251,9 @@ const Contact = () => {
                     <div className="send-btn-inner relative z-10 flex items-center gap-3">
                         {isSending ? (
                           <span className="flex gap-1">
-                            <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
-                            <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce [animation-delay:-0.15s]" />
-                            <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce" />
+                            {[0, 1, 2].map(i => (
+                              <span key={i} className={`w-1.5 h-1.5 bg-black rounded-full animate-bounce`} style={{ animationDelay: `${(i - 2) * 0.15}s` }} />
+                            ))}
                           </span>
                         ) : (
                           <>Send_Message <FiSend className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></>
@@ -235,5 +269,17 @@ const Contact = () => {
     </section>
   );
 };
+
+// Reusable Input Component for cleaner JSX
+const InputField = ({ label, ...props }) => (
+  <div className="space-y-3">
+    <label className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.2em] ml-1">{label}</label>
+    <input 
+      required 
+      {...props} 
+      className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 focus:bg-white/[0.06] transition-all text-sm outline-none" 
+    />
+  </div>
+);
 
 export default memo(Contact);
