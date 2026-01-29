@@ -42,7 +42,7 @@ const projects = [
   },
   {
     id: 3,
-    title: "Digital Shop Ecosystem",
+    title: "AI-Driven Market Hub",
     subtitle: "Secure Marketplace with Stripe",
     description:
       "AI-driven marketplace featuring smart personalization, automated fraud detection, and scalable modular architecture for high-traffic stability and predictive growth.",
@@ -55,7 +55,7 @@ const projects = [
   },
   {
     id: 4,
-    title: "Enterprise Command",
+    title: "AI-Powered Command Console",
     subtitle: "Real-time Data Visualization",
     description:
       "Advanced AI-driven admin panel featuring real-time predictive inventory analytics and automated business intelligence with RBAC security.",
