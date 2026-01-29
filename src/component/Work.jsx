@@ -45,7 +45,7 @@ const projects = [
     title: "Digital Shop Ecosystem",
     subtitle: "Secure Marketplace with Stripe",
     description:
-      "End-to-end digital marketplace featuring secure payment processing and modular backend architecture for high-traffic stability.",
+      "AI-driven marketplace featuring smart personalization, automated fraud detection, and scalable modular architecture for high-traffic stability and predictive growth.",
     image: "/client.png",
     link: "https://digital-store-rj52.vercel.app",
     code: "https://github.com/shihabdev332/Digital-Shop-Front-end",
@@ -58,7 +58,7 @@ const projects = [
     title: "Enterprise Command",
     subtitle: "Real-time Data Visualization",
     description:
-      "Sophisticated administrative control panel for real-time inventory tracking and business intelligence with RBAC security.",
+      "Advanced AI-driven admin panel featuring real-time predictive inventory analytics and automated business intelligence with RBAC security.",
     image: "/admin.png",
     link: "https://admin-panel-zeta-two-83.vercel.app/",
     code: "https://github.com/shihabdev332/Digital-shop-admin-panel",
