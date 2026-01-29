@@ -42,7 +42,7 @@ const projects = [
   },
   {
     id: 3,
-    title: "AI-Driven Market Hub",
+    title: "AI-Infused Commerce Ecosystem",
     subtitle: "Secure Marketplace with Stripe",
     description:
       "AI-driven marketplace featuring smart personalization, automated fraud detection, and scalable modular architecture for high-traffic stability and predictive growth.",
