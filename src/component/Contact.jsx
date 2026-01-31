@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
   // Config Constants
-  const WHATSAPP_NUMBER = "+8801757288373";
+  const WHATSAPP_NUMBER = "+8801880275733";
   const SERVICE_ID = 'service_0mxeb79';
   const TEMPLATE_ID = 'template_bmpqdrk';
   const PUBLIC_KEY = '8ywpr-7h67rHdyQV5';
