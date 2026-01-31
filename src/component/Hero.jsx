@@ -193,7 +193,7 @@ const Hero = () => {
           >
             <div className="w-full h-full rounded-full bg-[#020205] overflow-hidden border-[6px] border-[#020205]">
               <img
-                src="this.png"
+                src="this.jpeg"
                 alt="Shihab"
                 className="w-full h-full object-cover  scale-110 group-hover:scale-105 transition-transform duration-700"
               />
