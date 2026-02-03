@@ -113,7 +113,7 @@ const Navbar = () => {
             download
             className="px-8 py-3 rounded-full border border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 hover:bg-white hover:text-black"
           >
-            Download_CV
+            Download_RESUME
           </a>
         </div>
 
