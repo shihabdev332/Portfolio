@@ -8,108 +8,58 @@ const Loading = ({ onFinish }) => {
   const progressBarRef = useRef(null);
   const nameRef = useRef(null);
   const gridRef = useRef(null);
-  const leftHudRef = useRef(null);
-  const rightHudRef = useRef(null);
-  const subtitleRef = useRef(null);
+  const hudElements = useRef([]);
 
   const systemLogs = [
-    "> BOOT_SEQUENCE_START",
-    "> ENGINE: NODE_V8",
-    "> STACK: MERN + LARAVEL",
-    "> SECURITY: AES_256",
-    "> MODE: PRODUCTION",
+    "> INIT_KERNEL",
+    "> MERN_STACK_LOADED",
+    "> LARAVEL_BRIDGE_ACTIVE",
+    "> ENCRYPT_SESSION",
   ];
 
   useGSAP(() => {
     const tl = gsap.timeline({
-      defaults: { ease: "power3.out" },
       onComplete: () => {
         gsap.to(containerRef.current, {
-          scale: 1.6,
           opacity: 0,
-          filter: "blur(18px)",
-          duration: 0.45,
-          ease: "expo.in",
+          filter: "blur(20px)",
+          duration: 0.4,
+          ease: "power4.in",
           onComplete: onFinish,
         });
       },
     });
 
-    // Initial state
-    gsap.set(nameRef.current, {
-      opacity: 0,
-      z: 300,
-      rotateX: 25,
-      scale: 0.85,
-    });
+    // 1. Initial Reveal (0.4s)
+    tl.fromTo(
+      nameRef.current,
+      { opacity: 0, y: 20, letterSpacing: "1em" },
+      { opacity: 1, y: 0, letterSpacing: "0.2em", duration: 0.4, ease: "expo.out" }
+    )
+    .fromTo(
+      hudElements.current,
+      { opacity: 0, scale: 0.9 },
+      { opacity: 1, scale: 1, duration: 0.3, stagger: 0.1 },
+      "-=0.2"
+    );
 
-    gsap.set(subtitleRef.current, {
-      opacity: 0,
-      y: 10,
-    });
-
-    gsap.set([leftHudRef.current, rightHudRef.current], {
-      opacity: 0,
-      x: (i) => (i === 0 ? -40 : 40),
-    });
-
-    gsap.set(progressBarRef.current, { scaleX: 0 });
-
-    // Entrance
-    tl.to(nameRef.current, {
-      opacity: 1,
-      z: 0,
-      rotateX: 0,
-      scale: 1,
-      duration: 0.8,
-    })
-      .to(
-        subtitleRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-        },
-        "-=0.3"
-      )
-      .to(
-        [leftHudRef.current, rightHudRef.current],
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.5,
-        },
-        "-=0.4"
-      );
-
-    // Progress (≈ 1.4s)
+    // 2. Progress Logic (Total 1.4s for the bar)
     const counter = { value: 0 };
     tl.to(counter, {
       value: 100,
       duration: 1.4,
-      ease: "none",
+      ease: "power1.inOut",
       onUpdate: () => {
         const v = Math.floor(counter.value);
-        percentTextRef.current.textContent = v;
-        progressBarRef.current.style.transform = `scaleX(${v / 100})`;
-
-        // Subtle glow pulse after 70%
-        if (v > 70) {
-          gsap.to(nameRef.current, {
-            textShadow:
-              "0 0 30px rgba(99,102,241,0.9), 0 0 60px rgba(139,92,246,0.6)",
-            duration: 0.2,
-            yoyo: true,
-            repeat: 1,
-          });
-        }
+        if (percentTextRef.current) percentTextRef.current.textContent = v;
+        if (progressBarRef.current) progressBarRef.current.style.transform = `scaleX(${v / 100})`;
       },
     });
 
-    // Grid motion
+    // Background Grid Animation
     gsap.to(gridRef.current, {
-      y: 90,
-      duration: 1,
+      y: 64,
+      duration: 0.8,
       repeat: -1,
       ease: "none",
     });
@@ -118,93 +68,82 @@ const Loading = ({ onFinish }) => {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black text-white overflow-hidden perspective-[1200px]"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030303] text-white overflow-hidden font-sans"
     >
-      {/* Scanlines + vignette */}
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:100%_3px] opacity-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_30%,black_100%)]" />
-
-      {/* Grid */}
-      <div className="absolute bottom-[-20%] w-[200%] h-[60%] opacity-30">
+      {/* Premium Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15)_0%,transparent_70%)]" />
+      <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      
+      {/* Grid Floor */}
+      <div className="absolute bottom-0 w-full h-[40vh] perspective-[500px] overflow-hidden opacity-40">
         <div
           ref={gridRef}
-          className="w-full h-full bg-[linear-gradient(to_right,#6366f1_1px,transparent_1px),linear-gradient(to_bottom,#6366f1_1px,transparent_1px)] bg-[size:64px_64px] [transform:rotateX(72deg)]"
+          className="w-full h-[200%] bg-[linear-gradient(to_right,#312e81_1px,transparent_1px),linear-gradient(to_bottom,#312e81_1px,transparent_1px)] bg-[size:40px_40px] [transform:rotateX(60deg)] origin-top"
         />
       </div>
 
-      {/* Left HUD */}
-      <div
-        ref={leftHudRef}
-        className="hidden lg:flex absolute left-10 top-1/2 -translate-y-1/2 flex-col gap-6 border-l border-indigo-500/30 pl-5 font-mono text-[10px] uppercase text-indigo-400"
-      >
-        <div>
-          <p className="text-white/40">CPU Load</p>
-          <p className="text-lg font-black">96.8%</p>
+      {/* Top HUD - Visible on Mobile */}
+      <div className="absolute top-8 left-6 right-6 flex justify-between items-start">
+        <div 
+          ref={(el) => (hudElements.current[0] = el)}
+          className="flex flex-col gap-1 border-l-2 border-indigo-500 pl-3"
+        >
+          <span className="text-[10px] text-indigo-400 font-mono tracking-widest uppercase">Status</span>
+          <span className="text-xs font-bold uppercase tracking-tighter">System_Boot</span>
         </div>
-        <div>
-          <p className="text-white/40">Latency</p>
-          <p className="text-lg font-black">12ms</p>
-        </div>
-        <div>
-          <p className="text-white/40">Security</p>
-          <p className="text-emerald-500 font-black">ACTIVE</p>
+        <div 
+          ref={(el) => (hudElements.current[1] = el)}
+          className="text-right flex flex-col items-end"
+        >
+          <div className="flex gap-1 mb-1">
+            {[1, 2, 3].map(i => <div key={i} className="w-1 h-1 bg-indigo-500 animate-pulse" />)}
+          </div>
+          <span className="text-[8px] font-mono text-indigo-400/60 uppercase">Node_V8_Stable</span>
         </div>
       </div>
 
-      {/* Center */}
-      <div className="relative z-10 flex flex-col items-center px-4 text-center">
-        <div className="mb-6 px-4 py-1 border border-indigo-500/40 rounded-full text-[9px] tracking-[0.4em] uppercase text-indigo-300">
-          System Initialization
-        </div>
-
+      {/* Center Identity */}
+      <div className="relative z-10 flex flex-col items-center">
         <h1
           ref={nameRef}
-          className="text-[22vw] md:text-[10rem] font-black italic tracking-tighter leading-none select-none"
-          style={{
-            textShadow:
-              "0 0 20px rgba(99,102,241,0.6), 0 0 60px rgba(139,92,246,0.4)",
-          }}
+          className="text-6xl md:text-9xl font-black italic tracking-[0.2em] leading-none mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white via-indigo-200 to-indigo-500"
+          style={{ filter: "drop-shadow(0 0 25px rgba(99,102,241,0.5))" }}
         >
           SHIHAB
         </h1>
-
-        <p
-          ref={subtitleRef}
-          className="mt-3 text-[10px] md:text-xs tracking-[0.5em] uppercase text-indigo-400/70"
-        >
-          Full-Stack Systems • High Performance Web
+        <p className="text-[10px] md:text-xs tracking-[0.8em] uppercase text-indigo-400/80 mb-12">
+          Full Stack Developer
         </p>
 
-        <div className="w-[280px] md:w-[520px] mt-14">
-          <div className="flex justify-between items-end mb-3 font-mono">
-            <span className="text-[9px] text-indigo-400">
-              Compiling Assets
-            </span>
-            <span className="text-5xl md:text-6xl font-black">
+        {/* Loading Bar Container */}
+        <div className="w-64 md:w-96 group">
+          <div className="flex justify-between items-baseline mb-2 px-1">
+            <span className="text-[9px] font-mono text-indigo-400 uppercase tracking-widest">Initialization</span>
+            <span className="text-2xl font-black font-mono tracking-tighter">
               <span ref={percentTextRef}>0</span>%
             </span>
           </div>
-
-          <div className="h-2 w-full bg-white/10 overflow-hidden">
+          <div className="h-[2px] w-full bg-white/5 relative overflow-hidden">
             <div
               ref={progressBarRef}
-              className="h-full w-full origin-left bg-gradient-to-r from-indigo-600 via-purple-500 to-white shadow-[0_0_25px_#6366f1]"
+              className="h-full w-full origin-left bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,1)]"
             />
           </div>
         </div>
       </div>
 
-      {/* Right HUD */}
-      <div
-        ref={rightHudRef}
-        className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 flex-col gap-2 font-mono text-[9px] text-indigo-400/50 text-right"
+      {/* Bottom Logs - Now Mobile Friendly */}
+      <div 
+        ref={(el) => (hudElements.current[2] = el)}
+        className="absolute bottom-10 left-6 flex flex-col gap-1 font-mono text-[8px] md:text-[10px] text-indigo-400/40"
       >
         {systemLogs.map((log, i) => (
           <div key={i}>{log}</div>
         ))}
-        <div className="text-emerald-500 animate-pulse">
-          READY_
-        </div>
+      </div>
+
+      <div className="absolute bottom-10 right-6 text-indigo-500 text-[10px] font-mono tracking-tighter animate-pulse">
+        SECURE_CONNECTION: 100%
       </div>
     </div>
   );
