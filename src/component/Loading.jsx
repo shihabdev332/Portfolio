@@ -8,13 +8,16 @@ const Loading = ({ onFinish }) => {
   const progressBarRef = useRef(null);
   const nameRef = useRef(null);
   const gridRef = useRef(null);
+  const cubeRef = useRef(null);
   const hudElements = useRef([]);
 
   const systemLogs = [
-    "> INIT_KERNEL",
-    "> MERN_STACK_LOADED",
-    "> LARAVEL_BRIDGE_ACTIVE",
-    "> ENCRYPT_SESSION",
+    "> INIT_KERNEL_v3.0.4",
+    "> MERN_STACK_VIRTUAL_CORE_LOADED",
+    "> LARAVEL_BRIDGE_ACTIVE_SYNC",
+    "> ENCRYPT_SESSION_RSA_4096",
+    "> LOADING_DATABASE_SHARDS",
+    "> BYPASSING_CACHE_LAYERS",
   ];
 
   useGSAP(() => {
@@ -22,128 +25,163 @@ const Loading = ({ onFinish }) => {
       onComplete: () => {
         gsap.to(containerRef.current, {
           opacity: 0,
-          filter: "blur(20px)",
-          duration: 0.4,
+          filter: "blur(40px)",
+          duration: 0.5,
           ease: "power4.in",
           onComplete: onFinish,
         });
       },
     });
 
-    // 1. Initial Reveal (0.4s)
+    // 1. Aggressive Reveal with Glitch
     tl.fromTo(
       nameRef.current,
-      { opacity: 0, y: 20, letterSpacing: "1em" },
-      { opacity: 1, y: 0, letterSpacing: "0.2em", duration: 0.4, ease: "expo.out" }
-    )
-    .fromTo(
-      hudElements.current,
-      { opacity: 0, scale: 0.9 },
-      { opacity: 1, scale: 1, duration: 0.3, stagger: 0.1 },
-      "-=0.2"
+      { opacity: 0, scale: 0.8, filter: "blur(10px)" },
+      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.3, ease: "back.out(1.7)" }
     );
 
-    // 2. Progress Logic (Total 1.4s for the bar)
-    const counter = { value: 0 };
-    tl.to(counter, {
-      value: 100,
-      duration: 1.4,
-      ease: "power1.inOut",
-      onUpdate: () => {
-        const v = Math.floor(counter.value);
-        if (percentTextRef.current) percentTextRef.current.textContent = v;
-        if (progressBarRef.current) progressBarRef.current.style.transform = `scaleX(${v / 100})`;
-      },
+    // Glitch loop for Name
+    gsap.to(nameRef.current, {
+      skewX: () => Math.random() * 20 - 10,
+      x: () => Math.random() * 10 - 5,
+      opacity: () => Math.random() * 0.5 + 0.5,
+      duration: 0.1,
+      repeat: -1,
+      repeatRefresh: true,
+      ease: "none",
     });
 
-    // Background Grid Animation
-    gsap.to(gridRef.current, {
-      y: 64,
-      duration: 0.8,
+    // 2. 3D Cube Rotation
+    gsap.to(cubeRef.current, {
+      rotateY: 360,
+      rotateX: 360,
+      duration: 3,
       repeat: -1,
       ease: "none",
     });
+
+    // 3. Fast & Aggressive Progress Logic
+    const counter = { value: 0 };
+    tl.to(counter, {
+      value: 100,
+      duration: 1.6,
+      ease: "power4.inOut",
+      onUpdate: () => {
+        const v = Math.floor(counter.value);
+        if (percentTextRef.current) percentTextRef.current.textContent = v;
+        if (progressBarRef.current) {
+          progressBarRef.current.style.transform = `scaleX(${v / 100})`;
+          // Add shake effect when loading
+          gsap.set(progressBarRef.current, { x: Math.random() * 2 });
+        }
+      },
+    }, "-=0.2");
+
+    // Background Grid Motion
+    gsap.to(gridRef.current, {
+      y: 80,
+      duration: 0.5,
+      repeat: -1,
+      ease: "none",
+    });
+
   }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030303] text-white overflow-hidden font-sans"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#020202] text-white overflow-hidden font-mono select-none"
     >
-      {/* Premium Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15)_0%,transparent_70%)]" />
-      <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      {/* 3D Background Overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.2)_0%,transparent_70%)]" />
       
-      {/* Grid Floor */}
-      <div className="absolute bottom-0 w-full h-[40vh] perspective-[500px] overflow-hidden opacity-40">
+      {/* 3D Floating Elements */}
+      <div className="absolute inset-0 perspective-[1000px] pointer-events-none">
+        <div 
+          ref={cubeRef}
+          className="absolute top-1/2 left-1/2 w-64 h-64 -translate-x-1/2 -translate-y-1/2 border border-indigo-500/20 rounded-full"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+           <div className="absolute inset-0 border border-indigo-500/10 rotate-45 scale-110" />
+           <div className="absolute inset-0 border border-indigo-400/5 -rotate-12 scale-125" />
+        </div>
+      </div>
+
+      {/* Moving Grid Floor */}
+      <div className="absolute bottom-0 w-full h-[50vh] perspective-[800px] overflow-hidden opacity-30">
         <div
           ref={gridRef}
-          className="w-full h-[200%] bg-[linear-gradient(to_right,#312e81_1px,transparent_1px),linear-gradient(to_bottom,#312e81_1px,transparent_1px)] bg-[size:40px_40px] [transform:rotateX(60deg)] origin-top"
+          className="w-full h-[200%] bg-[linear-gradient(to_right,#4338ca_1px,transparent_1px),linear-gradient(to_bottom,#4338ca_1px,transparent_1px)] bg-[size:50px_50px] [transform:rotateX(75deg)] origin-top"
         />
       </div>
 
-      {/* Top HUD - Visible on Mobile */}
-      <div className="absolute top-8 left-6 right-6 flex justify-between items-start">
-        <div 
-          ref={(el) => (hudElements.current[0] = el)}
-          className="flex flex-col gap-1 border-l-2 border-indigo-500 pl-3"
-        >
-          <span className="text-[10px] text-indigo-400 font-mono tracking-widest uppercase">Status</span>
-          <span className="text-xs font-bold uppercase tracking-tighter">System_Boot</span>
-        </div>
-        <div 
-          ref={(el) => (hudElements.current[1] = el)}
-          className="text-right flex flex-col items-end"
-        >
-          <div className="flex gap-1 mb-1">
-            {[1, 2, 3].map(i => <div key={i} className="w-1 h-1 bg-indigo-500 animate-pulse" />)}
-          </div>
-          <span className="text-[8px] font-mono text-indigo-400/60 uppercase">Node_V8_Stable</span>
-        </div>
+      {/* Top Left HUD */}
+      <div className="absolute top-10 left-10 hidden md:block border-l-2 border-indigo-600 pl-4 py-2">
+        <div className="text-[10px] text-indigo-500 animate-pulse">SYSTEM_ACTIVE</div>
+        <div className="text-xl font-black">X-001_CORE</div>
+        <div className="text-[8px] opacity-50 mt-2 italic">LOC: 23.8103° N, 90.4125° E</div>
       </div>
 
       {/* Center Identity */}
       <div className="relative z-10 flex flex-col items-center">
-        <h1
-          ref={nameRef}
-          className="text-6xl md:text-9xl font-black italic tracking-[0.2em] leading-none mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white via-indigo-200 to-indigo-500"
-          style={{ filter: "drop-shadow(0 0 25px rgba(99,102,241,0.5))" }}
-        >
-          SHIHAB
-        </h1>
-        <p className="text-[10px] md:text-xs tracking-[0.8em] uppercase text-indigo-400/80 mb-12">
-          Full Stack Developer
-        </p>
+        <div className="relative">
+          <h1
+            ref={nameRef}
+            className="text-7xl md:text-[10rem] font-black italic tracking-tighter leading-none mb-2 bg-clip-text text-transparent bg-gradient-to-b from-white via-indigo-300 to-indigo-700"
+            style={{ filter: "drop-shadow(0 0 30px rgba(79,70,229,0.6))" }}
+          >
+            SHIHAB
+          </h1>
+          {/* Ghost text for glitch depth */}
+          <div className="absolute top-0 left-0 -z-10 text-7xl md:text-[10rem] font-black italic opacity-20 text-red-500 blur-sm translate-x-1">SHIHAB</div>
+        </div>
 
-        {/* Loading Bar Container */}
-        <div className="w-64 md:w-96 group">
-          <div className="flex justify-between items-baseline mb-2 px-1">
-            <span className="text-[9px] font-mono text-indigo-400 uppercase tracking-widest">Initialization</span>
-            <span className="text-2xl font-black font-mono tracking-tighter">
+        <div className="flex items-center gap-4 mb-16">
+          <div className="h-[1px] w-12 bg-indigo-500/50" />
+          <p className="text-[10px] md:text-xs tracking-[1em] uppercase text-indigo-400 font-light">
+            Architecting Logic
+          </p>
+          <div className="h-[1px] w-12 bg-indigo-500/50" />
+        </div>
+
+        {/* Loading Bar Section */}
+        <div className="w-72 md:w-[30rem]">
+          <div className="flex justify-between items-end mb-3">
+            <div className="flex flex-col">
+              <span className="text-[8px] text-indigo-500/70 mb-1">DATA_STREAM_LOAD</span>
+              <span className="text-xs tracking-widest font-bold">INITIALIZING...</span>
+            </div>
+            <span className="text-4xl font-black italic leading-none">
               <span ref={percentTextRef}>0</span>%
             </span>
           </div>
-          <div className="h-[2px] w-full bg-white/5 relative overflow-hidden">
+          
+          <div className="h-1 w-full bg-indigo-950/30 backdrop-blur-md relative overflow-hidden border border-white/5">
             <div
               ref={progressBarRef}
-              className="h-full w-full origin-left bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,1)]"
+              className="h-full w-full origin-left bg-gradient-to-r from-indigo-600 to-white shadow-[0_0_20px_rgba(99,102,241,1)]"
             />
           </div>
         </div>
       </div>
 
-      {/* Bottom Logs - Now Mobile Friendly */}
-      <div 
-        ref={(el) => (hudElements.current[2] = el)}
-        className="absolute bottom-10 left-6 flex flex-col gap-1 font-mono text-[8px] md:text-[10px] text-indigo-400/40"
-      >
-        {systemLogs.map((log, i) => (
-          <div key={i}>{log}</div>
-        ))}
-      </div>
-
-      <div className="absolute bottom-10 right-6 text-indigo-500 text-[10px] font-mono tracking-tighter animate-pulse">
-        SECURE_CONNECTION: 100%
+      {/* Bottom Technical Logs */}
+      <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end">
+        <div className="flex flex-col gap-1 text-[9px] text-indigo-400/60 uppercase">
+          {systemLogs.map((log, i) => (
+            <div key={i} className="flex gap-2">
+              <span className="text-indigo-600">[{i}]</span>
+              <span>{log}</span>
+            </div>
+          ))}
+        </div>
+        
+        <div className="text-right flex flex-col gap-1">
+          <div className="text-[9px] text-indigo-500 animate-pulse font-bold tracking-widest">
+            SECURE_CONNECTION_ESTABLISHED
+          </div>
+          <div className="text-[8px] opacity-30">© 2026 SHIHAB_LABS_ALL_RIGHTS_RESERVED</div>
+        </div>
       </div>
     </div>
   );
