@@ -7,16 +7,15 @@ const Loading = ({ onFinish }) => {
   const percentTextRef = useRef(null);
   const progressBarRef = useRef(null);
   const nameRef = useRef(null);
-  const gridRef = useRef(null);
-  const hudElements = useRef([]);
+  const scannerRef = useRef(null);
+  const particlesRef = useRef([]);
+  const cubeRef = useRef(null);
 
   const systemLogs = [
-    "> INIT_KERNEL",
-    "> MERN_STACK_LOADED",
-    "> LARAVEL_BRIDGE_ACTIVE",
-    "> ENCRYPT_SESSION",
-    "> AI_CORE_SYNC",
-    "> SECURITY_LAYER_ENGAGED",
+    "> INIT_KERNEL_v3.0.4",
+    "> MERN_STACK_VIRTUAL_CORE_LOADED",
+    "> LARAVEL_BRIDGE_ACTIVE_SYNC",
+    "> ENCRYPT_SESSION_RSA_4096",
   ];
 
   useGSAP(() => {
@@ -24,158 +23,155 @@ const Loading = ({ onFinish }) => {
       onComplete: () => {
         gsap.to(containerRef.current, {
           opacity: 0,
-          filter: "blur(20px)",
-          duration: 0.4,
+          filter: "blur(40px)",
+          duration: 0.5,
           ease: "power4.in",
           onComplete: onFinish,
         });
       },
     });
 
-    // Identity reveal
+    // 1. Initial Reveal
     tl.fromTo(
       nameRef.current,
-      { opacity: 0, y: 20, letterSpacing: "1em" },
-      {
-        opacity: 1,
-        y: 0,
-        letterSpacing: "0.2em",
-        duration: 0.4,
-        ease: "expo.out",
-      }
-    ).fromTo(
-      hudElements.current,
-      { opacity: 0, scale: 0.9 },
-      { opacity: 1, scale: 1, duration: 0.3, stagger: 0.1 },
-      "-=0.2"
+      { opacity: 0, scale: 0.9, filter: "blur(10px)" },
+      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }
     );
 
-    // Progress (UNCHANGED)
+    // Glitch loop for Name
+    gsap.to(nameRef.current, {
+      skewX: () => Math.random() * 10 - 5,
+      x: () => Math.random() * 6 - 3,
+      duration: 0.1,
+      repeat: -1,
+      repeatRefresh: true,
+    });
+
+    // 2. Optimized Progress Logic (1.2s for snappy feel)
     const counter = { value: 0 };
     tl.to(counter, {
       value: 100,
-      duration: 1.4,
-      ease: "power1.inOut",
+      duration: 1.2,
+      ease: "power2.inOut",
       onUpdate: () => {
         const v = Math.floor(counter.value);
         if (percentTextRef.current) percentTextRef.current.textContent = v;
-        if (progressBarRef.current)
+        if (progressBarRef.current) {
           progressBarRef.current.style.transform = `scaleX(${v / 100})`;
+        }
       },
-    });
+    }, "-=0.2");
 
-    // Grid motion
-    gsap.to(gridRef.current, {
-      y: 64,
-      duration: 0.8,
+    // 3. Cool Background Animations
+    // Scanner Line
+    gsap.to(scannerRef.current, {
+      top: "100%",
+      duration: 2,
       repeat: -1,
       ease: "none",
     });
+
+    // Floating Particles
+    particlesRef.current.forEach((p) => {
+      gsap.to(p, {
+        y: "-=100",
+        opacity: 0,
+        duration: "random(2, 4)",
+        repeat: -1,
+        delay: "random(0, 2)",
+        ease: "none",
+      });
+    });
+
+    // Rotation for 3D element
+    gsap.to(cubeRef.current, {
+      rotateZ: 360,
+      duration: 8,
+      repeat: -1,
+      ease: "none",
+    });
+
   }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030303] text-white overflow-hidden font-sans"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#020202] text-white overflow-hidden font-mono select-none"
     >
-      {/* Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.2)_0%,transparent_70%)]" />
-      <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      {/* Cool Background: Scanning Line */}
+      <div 
+        ref={scannerRef}
+        className="absolute top-[-10%] left-0 w-full h-[20vh] bg-gradient-to-b from-transparent via-indigo-500/10 to-transparent z-0 pointer-events-none"
+      />
 
-      {/* Grid */}
-      <div className="absolute bottom-0 w-full h-[40vh] perspective-[500px] overflow-hidden opacity-40">
-        <div
-          ref={gridRef}
-          className="w-full h-[200%] bg-[linear-gradient(to_right,#312e81_1px,transparent_1px),linear-gradient(to_bottom,#312e81_1px,transparent_1px)] bg-[size:40px_40px] [transform:rotateX(60deg)] origin-top"
-        />
+      {/* Floating Data Particles */}
+      <div className="absolute inset-0 z-0">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            ref={(el) => (particlesRef.current[i] = el)}
+            className="absolute w-1 h-1 bg-indigo-500/30 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
       </div>
 
-      {/* Top HUD */}
-      <div className="absolute top-8 left-6 right-6 flex justify-between">
-        <div
-          ref={(el) => (hudElements.current[0] = el)}
-          className="border-l-2 border-indigo-500 pl-3"
-        >
-          <div className="text-[10px] text-indigo-400 font-mono uppercase tracking-widest">
-            Core Status
-          </div>
-          <div className="text-xs font-bold tracking-tight text-white">
-            SYSTEM_ARMED
-          </div>
-        </div>
-
-        <div
-          ref={(el) => (hudElements.current[1] = el)}
-          className="text-right"
-        >
-          <div className="flex gap-1 justify-end mb-1">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="w-1 h-1 bg-indigo-500 animate-pulse" />
-            ))}
-          </div>
-          <span className="text-[8px] font-mono text-indigo-400/60 uppercase">
-            Node_V8 | AES-256
-          </span>
-        </div>
+      {/* 3D Decorative Ring */}
+      <div 
+        ref={cubeRef}
+        className="absolute w-[500px] h-[500px] border border-indigo-500/5 rounded-full z-0"
+        style={{ perspective: "1000px" }}
+      >
+        <div className="absolute inset-0 border-t-2 border-indigo-500/20 rounded-full animate-spin-slow" />
       </div>
 
-      {/* Center */}
+      {/* Center Identity */}
       <div className="relative z-10 flex flex-col items-center">
-        <h1
-          ref={nameRef}
-          className="text-6xl md:text-9xl font-black italic tracking-[0.2em] leading-none mb-3 text-transparent bg-clip-text bg-gradient-to-b from-white via-indigo-200 to-indigo-500"
-          style={{
-            transform: "translateZ(40px)",
-            textShadow: `
-              0 1px 0 #4338ca,
-              0 4px 10px rgba(99,102,241,0.6),
-              0 10px 40px rgba(99,102,241,0.9)
-            `,
-          }}
-        >
-          SHIHAB
-        </h1>
+        <div className="relative">
+          <h1
+            ref={nameRef}
+            className="text-7xl md:text-[10rem] font-black italic tracking-tighter leading-none mb-2 bg-clip-text text-transparent bg-gradient-to-b from-white via-indigo-300 to-indigo-700"
+            style={{ filter: "drop-shadow(0 0 30px rgba(79,70,229,0.4))" }}
+          >
+            SHIHAB
+          </h1>
+        </div>
 
-        <p className="text-[10px] md:text-xs tracking-[0.8em] uppercase text-indigo-400/80 mb-4">
-          Full Stack Developer
+        <p className="text-[10px] md:text-xs tracking-[1em] uppercase text-indigo-400/60 mb-16">
+          Architecting Logic
         </p>
 
-        <p className="text-[9px] font-mono uppercase tracking-widest text-indigo-500/70 mb-10 animate-pulse">
-          SYSTEM CORE INITIALIZING
-        </p>
-
-        {/* Loading Bar */}
-        <div className="w-64 md:w-96">
-          <div className="flex justify-between mb-2">
-            <span className="text-[9px] font-mono text-indigo-400 uppercase tracking-widest">
-              Boot Sequence
-            </span>
-            <span className="text-2xl font-black font-mono">
+        {/* Snappy Loading Bar */}
+        <div className="w-72 md:w-[30rem]">
+          <div className="flex justify-between items-end mb-3 font-bold">
+            <span className="text-[9px] text-indigo-500 tracking-widest">SYSTEM_BOOT</span>
+            <span className="text-4xl italic">
               <span ref={percentTextRef}>0</span>%
             </span>
           </div>
-
-          <div className="h-[2px] w-full bg-white/5 overflow-hidden">
+          
+          <div className="h-[2px] w-full bg-white/5 relative overflow-hidden">
             <div
               ref={progressBarRef}
-              className="h-full w-full origin-left bg-indigo-500 shadow-[0_0_20px_rgba(99,102,241,1)]"
+              className="h-full w-full origin-left bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,1)]"
             />
           </div>
         </div>
       </div>
 
-      {/* Logs */}
-      <div
-        ref={(el) => (hudElements.current[2] = el)}
-        className="absolute bottom-10 left-6 font-mono text-[8px] md:text-[10px] text-indigo-400/40"
-      >
-        {systemLogs.map((log, i) => (
-          <div key={i}>{log}</div>
-        ))}
-      </div>
-
-      <div className="absolute bottom-10 right-6 text-indigo-500 text-[10px] font-mono animate-pulse">
-        THREAT_LEVEL: NONE
+      {/* Bottom HUD */}
+      <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end">
+        <div className="flex flex-col gap-1 text-[8px] text-indigo-400/40 uppercase">
+          {systemLogs.map((log, i) => (
+            <div key={i}>{log}</div>
+          ))}
+        </div>
+        <div className="text-[9px] text-indigo-500/50 animate-pulse font-bold">
+          v3.0.4_STABLE
+        </div>
       </div>
     </div>
   );
