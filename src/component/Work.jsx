@@ -34,7 +34,7 @@ const projects = [
     description:
       "A robust retail engine built for complex state management and high-volume transactions with flicker-free cart logic.",
     image: "/e1.png",
-    link: "https://online-shop-txm5.vercel.app/",
+    link: "https://online-shop-txm5.vercel.app",
     code: "https://github.com/shihabdev332/online-Shop",
     tech: ["React", "Redux Toolkit", "Node.js", "Express"],
     role: "Full Stack Developer",
@@ -47,8 +47,8 @@ const projects = [
     description:
       "AI-driven marketplace featuring smart personalization, automated fraud detection, and scalable modular architecture for high-traffic stability and predictive growth.",
     image: "/client.png",
-    link: "https://digital-store-rj52.vercel.app",
-    code: "https://github.com/shihabdev332/Digital-Shop-Front-end",
+    link: "https://online-shop-v5tf.vercel.app",
+    code: "https://github.com/shihabdev332/DigitalStore",
     tech: ["MERN Stack", "JWT Auth", "Stripe API", "MongoDB"],
     role: "Backend Architect",
     outcome: "Encrypted Transaction Pipeline",
@@ -60,8 +60,8 @@ const projects = [
     description:
       "Advanced AI-driven admin panel featuring real-time predictive inventory analytics and automated business intelligence with RBAC security.",
     image: "/admin.png",
-    link: "https://admin-panel-zeta-two-83.vercel.app/",
-    code: "https://github.com/shihabdev332/Digital-shop-admin-panel",
+    link: "https://admin-panel-zeta-two-83.vercel.app",
+    code: "https://github.com/shihabdev332/Admin_Panel",
     tech: ["React Query", "Chart.js", "Express", "Mongoose"],
     role: "System Designer",
     outcome: "Real-time Sync Stability",
