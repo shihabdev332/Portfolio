@@ -4,193 +4,184 @@ import { useGSAP } from "@gsap/react";
 
 const Loading = ({ onFinish }) => {
   const containerRef = useRef(null);
-  const codeStreamUpRef = useRef(null);
-  const codeStreamDownRef = useRef(null);
-  const contentRef = useRef(null);
-  const auraRef = useRef(null);
-  const mainTitleRef = useRef(null);
-  
-  // Performance Refs (No State)
   const percentTextRef = useRef(null);
   const progressBarRef = useRef(null);
+  const titleRef = useRef(null);
+  const subTitleRef = useRef(null);
+  const gridRef = useRef(null);
+  const codeRef = useRef(null);
 
   const codeSnippets = [
     "const app = express();",
-    "mongoose.connect(DB_URI);",
-    "app.use(cors());",
-    "export default function Hero()",
-    "useEffect(() => { ... }, []);",
-    "const [user, setUser] = useState();",
-    "api.post('/v1/auth/login')",
-    "npm install framer-motion",
-    "const data = await res.json();",
-    "export const dynamic = 'force-dynamic';",
+    "await mongoose.connect(URI);",
+    "export default function App()",
+    "process.env.JWT_SECRET",
+    "res.status(200).json({ success: true });",
+    "npm run build",
+    "git commit -m 'feat: optimized'",
   ];
 
   useGSAP(() => {
-    const totalDuration = 3.0; // Slightly faster for snappier feel
-
     const tl = gsap.timeline({
       onComplete: () => {
+        // AGGRESSIVE EXIT: Split or Zoom out fast
         gsap.to(containerRef.current, {
           yPercent: -100,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.inOut",
-          onComplete: onFinish
+          duration: 0.5,
+          ease: "expo.in", // Accelerate out
+          onComplete: onFinish,
         });
-      }
+      },
     });
 
-    // 1. Optimized Stream Animation (Linear & Light)
-    gsap.to([codeStreamUpRef.current, codeStreamDownRef.current], {
-      y: (i) => (i === 0 ? -1500 : 1500),
-      duration: 35, // Slower duration for less jitter
+    // 1. Initial Setups (Avoid Flash of Unstyled Content)
+    gsap.set(titleRef.current, { y: 100, opacity: 0, rotateX: -20 });
+    gsap.set(subTitleRef.current, { opacity: 0, letterSpacing: "0em" });
+    gsap.set(progressBarRef.current, { scaleX: 0 });
+
+    // 2. Cinematic Grid Movement (Infinite loop, separate from main TL)
+    gsap.to(gridRef.current, {
+      y: 100,
+      duration: 2,
+      repeat: -1,
+      ease: "linear",
+      force3D: true,
+    });
+
+    // 3. Floating Code Background (Slower, eerie)
+    gsap.to(codeRef.current, {
+      y: -200,
+      duration: 10,
       repeat: -1,
       ease: "none",
-      force3D: true // Hardware Acceleration
+      opacity: 0.1,
     });
 
-    // 2. Aura Pulse (Reduced Scale calculation)
-    gsap.to(auraRef.current, {
-      scale: 1.2,
-      opacity: 0.6,
-      duration: 3,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-      force3D: true
-    });
+    // --- MAIN TIMELINE (Aggressive Sequence) ---
 
-    // 3. 3D Title Float
-    gsap.to(mainTitleRef.current, {
-      y: -10,
-      rotateX: 5,
-      duration: 2.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-      force3D: true
-    });
+    // Step A: Impact Entrance (0s - 0.5s)
+    tl.to(titleRef.current, {
+      y: 0,
+      opacity: 1,
+      rotateX: 0,
+      duration: 0.8,
+      ease: "back.out(1.7)", // "Slam" effect
+    })
+    .to(subTitleRef.current, {
+      opacity: 1,
+      letterSpacing: "1.5em", // Expansion effect
+      duration: 1,
+      ease: "power2.out",
+    }, "-=0.6");
 
-    // 4. Optimized Counter Logic (Direct DOM Update - NO RE-RENDERS)
+    // Step B: The Counter (Direct DOM manipulation for 60FPS)
     const counterObj = { value: 0 };
+    
     tl.to(counterObj, {
       value: 100,
-      duration: totalDuration,
-      ease: "power2.inOut",
+      duration: 1.8, // Fast load time
+      ease: "expo.inOut", // Slow start, super fast middle, slow end
       onUpdate: () => {
-        // Direct manipulation avoids React Reconciliation lag
+        const val = Math.floor(counterObj.value);
+        
+        // Update Text
         if (percentTextRef.current) {
-          percentTextRef.current.textContent = Math.floor(counterObj.value);
+          percentTextRef.current.textContent = val;
         }
+        
+        // Update Bar (ScaleX is more performant than width)
         if (progressBarRef.current) {
-          progressBarRef.current.style.width = `${Math.floor(counterObj.value)}%`;
+          progressBarRef.current.style.transform = `scaleX(${val / 100})`;
         }
-      }
-    });
 
-    // 5. Entrance Animation
-    tl.fromTo(contentRef.current, 
-      { opacity: 0, scale: 0.95, filter: "blur(10px)" },
-      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.2, ease: "expo.out" },
-      0.1
-    );
+        // Add "Glitch/Shake" intensity based on speed
+        if (val > 20 && val < 80) {
+            gsap.set(percentTextRef.current, { 
+                x: gsap.utils.random(-2, 2), 
+                y: gsap.utils.random(-2, 2),
+                filter: `blur(${gsap.utils.random(0, 1)}px)` 
+            });
+        } else {
+            gsap.set(percentTextRef.current, { x: 0, y: 0, filter: "blur(0px)" });
+        }
+      },
+    }, "-=0.5"); // Overlap with title entrance
+
+    // Step C: Flash on Completion
+    tl.to(containerRef.current, {
+        backgroundColor: "#1a1a1a", // Slight flash
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1,
+        ease: "rough"
+    }, "-=0.2");
 
   }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030105] overflow-hidden select-none perspective-[1000px] will-change-transform"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#050505] overflow-hidden text-white font-mono perspective-[1200px]"
     >
-      {/* OPTIMIZED GRADIENT LAYERS */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#1a0b2e_0%,#000000_100%)]" />
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none" />
+      {/* --- BACKGROUND LAYERS --- */}
       
-      {/* Optimized Aura Light */}
-      <div 
-        ref={auraRef} 
-        className="absolute w-[600px] h-[600px] bg-purple-700/20 blur-[120px] rounded-full pointer-events-none will-change-[transform,opacity]" 
-      />
-      
-      {/* CODE STREAMS */}
-      <div className="absolute inset-0 opacity-[0.07] pointer-events-none flex justify-between px-4 md:px-20 overflow-hidden">
-        <div ref={codeStreamUpRef} className="will-change-transform flex flex-col gap-16 font-mono text-[10px] text-purple-300 uppercase tracking-[0.6em] italic">
-          {[...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
-        </div>
-        <div ref={codeStreamDownRef} className="will-change-transform flex flex-col gap-16 font-mono text-[10px] text-fuchsia-400 text-right uppercase tracking-[0.6em] italic">
-          {[...codeSnippets, ...codeSnippets].map((s, i) => <span key={i}>{s}</span>)}
-        </div>
+      {/* 1. Retro Grid Floor */}
+      <div className="absolute bottom-0 w-[200%] h-[50%] left-[-50%] perspective-[500px] opacity-20 pointer-events-none">
+         <div 
+            ref={gridRef}
+            className="w-full h-full bg-[linear-gradient(to_right,#4c1d95_1px,transparent_1px),linear-gradient(to_bottom,#4c1d95_1px,transparent_1px)] bg-[size:4rem_4rem] [transform:rotateX(60deg)] will-change-transform"
+         />
       </div>
 
-      {/* MAIN HUD CONTENT */}
-      <div ref={contentRef} className="relative z-[60] flex flex-col items-center w-full max-w-5xl transform-style-3d will-change-[transform,opacity]">
+      {/* 2. Radial Vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000_90%)] pointer-events-none" />
+
+      {/* 3. Code Rain (Background) */}
+      <div ref={codeRef} className="absolute inset-0 flex flex-col items-center justify-center opacity-[0.05] pointer-events-none select-none text-[10px] leading-loose text-purple-300">
+         {Array(10).fill([...codeSnippets]).flat().map((code, i) => (
+             <div key={i} className="whitespace-nowrap">{code}</div>
+         ))}
+      </div>
+
+      {/* --- MAIN CONTENT --- */}
+      <div className="relative z-10 flex flex-col items-center">
         
-        {/* Top Badge */}
-        <div className="mb-14 flex items-center gap-3 font-mono text-[9px] text-purple-200 border border-purple-500/20 bg-white/[0.02] px-6 py-2 rounded-full tracking-[0.4em] uppercase backdrop-blur-md shadow-lg">
-           <span className="h-1.5 w-1.5 bg-purple-400 rounded-full animate-pulse shadow-[0_0_8px_#a855f7]" />
-           System.Init.v4
+        {/* Title Group */}
+        <div className="mb-12 text-center transform-style-3d">
+            <h1 ref={titleRef} className="text-7xl md:text-9xl font-black tracking-tighter will-change-transform"
+                style={{ textShadow: "0 10px 30px rgba(124, 58, 237, 0.5)" }}>
+                MERN
+                <span className="text-transparent bg-clip-text bg-gradient-to-t from-purple-600 to-fuchsia-400">.DEV</span>
+            </h1>
+            <p ref={subTitleRef} className="mt-4 text-xs md:text-sm text-purple-300/60 uppercase font-bold tracking-[0em] will-change-[opacity,letter-spacing]">
+                System Architecture Loading
+            </p>
         </div>
 
-        {/* 3D BRAND TITLE */}
-        <div ref={mainTitleRef} className="relative text-center mb-20 transform-style-3d will-change-transform">
-          <h1 
-            className="text-white text-7xl md:text-[10rem] font-black tracking-tighter leading-none font-['Syne']"
-            style={{
-              textShadow: "0 1px 0 #4c1d95, 0 2px 0 #4c1d95, 0 3px 0 #4c1d95, 0 4px 0 #4c1d95, 0 10px 20px rgba(0,0,0,0.5)"
-            }}
-          >
-            MERN <span className="text-transparent bg-clip-text bg-gradient-to-b from-purple-400 via-fuchsia-300 to-white italic drop-shadow-none">STACK</span>
-          </h1>
-          <p className="mt-8 text-white/30 font-mono text-[10px] uppercase tracking-[1.5em] font-medium">
-            Architecting &nbsp; The &nbsp; Future
-          </p>
+        {/* Performance Bar & Counter */}
+        <div className="w-[300px] md:w-[500px] relative">
+            {/* Percentage */}
+            <div className="absolute -top-16 right-0 text-5xl font-black italic tracking-tighter mix-blend-difference">
+                <span ref={percentTextRef}>0</span>%
+            </div>
+
+            {/* Bar Container */}
+            <div className="h-2 w-full bg-gray-900 rounded-none overflow-hidden border border-gray-800">
+                <div 
+                    ref={progressBarRef}
+                    className="h-full w-full bg-white origin-left will-change-transform shadow-[0_0_20px_white]"
+                    style={{ transform: "scaleX(0)" }}
+                />
+            </div>
+
+            {/* Bottom Meta Data */}
+            <div className="flex justify-between mt-2 text-[9px] text-gray-500 font-medium uppercase tracking-widest">
+                <span>Memory: Allocated</span>
+                <span className="animate-pulse text-purple-500">Processing...</span>
+            </div>
         </div>
 
-        {/* PERFORMANCE OPTIMIZED PROGRESS DISPLAY */}
-        <div className="w-full max-w-[500px] p-8 relative">
-          
-          <div className="relative flex justify-between items-end mb-6 font-mono">
-            <div className="flex flex-col gap-1">
-                <span className="text-[9px] text-purple-400 font-bold tracking-[0.3em] uppercase">Status</span>
-                <span className="text-[10px] text-zinc-500 tracking-widest uppercase">Fetching Modules...</span>
-            </div>
-            <div className="flex items-baseline">
-                {/* Direct DOM Manipulation Target */}
-                <span ref={percentTextRef} className="text-white font-black text-6xl tracking-tighter">0</span>
-                <span className="text-purple-500 text-lg font-bold ml-1">%</span>
-            </div>
-          </div>
-
-          {/* Progress Bar Container */}
-          <div className="h-[3px] w-full bg-zinc-900/80 rounded-full overflow-hidden relative border border-white/5">
-            {/* Direct Style Update Target */}
-            <div 
-              ref={progressBarRef}
-              className="h-full w-0 bg-gradient-to-r from-purple-800 via-fuchsia-500 to-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.8)] relative"
-            >
-                <div className="absolute top-0 right-0 h-full w-20 bg-white/40 blur-[4px]" />
-            </div>
-          </div>
-
-          {/* Footer Metadata */}
-          <div className="mt-10 flex justify-between items-center opacity-60">
-              <div className="flex gap-6">
-                {["DB", "SRV", "CLI"].map((tag) => (
-                    <span key={tag} className="text-[8px] font-mono text-zinc-500 border border-zinc-800 px-2 py-1 rounded bg-black/20 tracking-widest">{tag}</span>
-                ))}
-              </div>
-              <div className="text-[8px] font-mono text-purple-500/60 tracking-widest uppercase">
-                Secure_v2026
-              </div>
-          </div>
-        </div>
       </div>
-
-      <style jsx>{`
-        .transform-style-3d { transform-style: preserve-3d; }
-      `}</style>
     </div>
   );
 };
