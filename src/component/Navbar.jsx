@@ -134,7 +134,7 @@ const Navbar = () => {
           />
         )}
 
-        {/* PREMIUM MOBILE SIDEBAR */}
+        {/* MOBILE SIDEBAR */}
         <div
           ref={mobileMenuRef}
           className="fixed top-0 right-0 z-[150] flex h-screen w-[80%] flex-col border-l border-white/5 bg-[#050507] p-8 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] sm:w-[50%] md:w-[40%]"
@@ -175,7 +175,7 @@ const Navbar = () => {
               download
               className="text-[15px] font-bold text-white/50 tracking-[0.2em] transition-colors hover:text-white"
             >
-              Click Here To Download CV
+              Click Here To Download Resume
             </a>
             <p className="mt-2 text-[8px] font-mono uppercase text-white/20">
               © 2026 Shihab
