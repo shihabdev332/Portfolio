@@ -266,8 +266,8 @@ const Services = () => {
           <h4 className="text-slate-500 font-mono text-xs uppercase tracking-[0.6em] mb-10">
             Initiating Connection Protocol...
           </h4>
-          <a href="#contact" className="inline-flex gap-6 text-white text-4xl font-black italic cursor pointer">
-            Initialize_Project
+          <a href="#contact" className="inline-flex items-center gap-6 text-white text-4xl font-black italic cursor pointer">
+            Initialize_Project.sh
             <span className="w-16 h-1 bg-purple-500 rounded-full" />
           </a>
         </div>
