@@ -97,7 +97,7 @@ const Skills = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skills.map((s, i) => (
             <div
               key={s.name}
@@ -121,7 +121,7 @@ const Skills = () => {
 
               <div className="relative z-10">
                 <div className="flex justify-between items-center mb-12">
-                  <h3 className="text-xl md:2xl font-bold text-white font-mono tracking-tight">
+                  <h3 className="text-2xl font-bold text-white font-mono tracking-tight">
                     {s.name}
                   </h3>
                   <span className="skill-percent text-4xl font-black text-white/90 font-mono">
