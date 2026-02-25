@@ -137,7 +137,7 @@ const Navbar = () => {
         {/* MOBILE SIDEBAR */}
         <div
           ref={mobileMenuRef}
-          className="fixed top-0 right-0 z-[150] flex h-[90%] w-[70%] flex-col border-l border-white/5 bg-[#050507] p-8 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] sm:w-[50%] md:w-[40%]"
+          className="fixed top-0 right-0 z-[150] flex h-[100%] w-[70%] flex-col border-l border-white/5 bg-[#050507] p-8 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] sm:w-[50%] md:w-[40%]"
         >
           {/* CLOSE BUTTON */}
           <div className="mb-12 flex justify-end">
