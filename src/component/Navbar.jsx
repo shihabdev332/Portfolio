@@ -113,7 +113,7 @@ const Navbar = () => {
             download
             className="px-8 py-3 rounded-full border border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 hover:bg-white hover:text-black"
           >
-            Download_RESUME
+            Download_CV
           </a>
         </div>
 
@@ -173,9 +173,9 @@ const Navbar = () => {
             <a
               href="/cv.pdf"
               download
-              className="text-[15px] font-bold text-white/50 tracking-[0.2em] transition-colors hover:text-white"
+              className="text-[15px] font-bold rounded-full border border-white/10 bg-white/5 text-[10px] uppercase tracking-widest transition-all duration-500 hover:bg-white hover:text-black"
             >
-              Click Here To Download Resume
+              Click Here To Download CV
             </a>
             <p className="mt-2 text-[8px] font-mono uppercase text-white/20">
               © 2026 Shihab
