@@ -109,7 +109,7 @@ const Navbar = () => {
         {/* CV DOWNLOAD DESKTOP */}
         <div className="hidden md:block">
           <a
-            href="/cv.pdf"
+            href="/Shihab_CV.pdf"
             download
             className="px-8 py-3 rounded-full border border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 hover:bg-white hover:text-black"
           >
@@ -171,7 +171,7 @@ const Navbar = () => {
           {/* MOBILE FOOTER */}
           <div className="mt-auto border-t border-white/5 pt-10">
             <a
-              href="/cv.pdf"
+              href="/Shihab_CV.pdf"
               download
               className="text-[15px] font-bold rounded-full border border-white/10 bg-white/5 text-[10px] uppercase tracking-widest transition-all duration-500 hover:bg-white hover:text-black"
             >
