@@ -10,12 +10,13 @@ const Loading = ({ onFinish }) => {
   const scannerRef = useRef(null);
   const particlesRef = useRef([]);
   const cubeRef = useRef(null);
+  const logRefs = useRef([]);
 
   const systemLogs = [
-    "> INIT_KERNEL_v3.0.4",
-    "> MERN_STACK_VIRTUAL_CORE_LOADED",
-    "> LARAVEL_BRIDGE_ACTIVE_SYNC",
-    "> ENCRYPT_SESSION_RSA_4096",
+    "> ESTABLISHING_SECURE_CONNECTION...",
+    "> BYPASSING_FIREWALL_PROTOCOLS...",
+    "> ROOT_ACCESS_GRANTED",
+    "> DECRYPTING_MERN_MODULES...",
   ];
 
   useGSAP(() => {
@@ -23,34 +24,49 @@ const Loading = ({ onFinish }) => {
       onComplete: () => {
         gsap.to(containerRef.current, {
           opacity: 0,
-          filter: "blur(40px)",
-          duration: 0.5,
-          ease: "power4.in",
+          filter: "blur(20px)",
+          scale: 1.05,
+          duration: 0.6,
+          ease: "power4.inOut",
           onComplete: onFinish,
         });
       },
     });
 
+    // Name Glitch Reveal
     tl.fromTo(
       nameRef.current,
-      { opacity: 0, scale: 0.9, filter: "blur(10px)" },
-      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }
+      { opacity: 0, scale: 0.8, filter: "blur(10px)", textShadow: "0px 0px 0px #10b981" },
+      { opacity: 1, scale: 1, filter: "blur(0px)", textShadow: "0px 0px 20px #10b981", duration: 0.5, ease: "expo.out" }
     );
 
+    // Continuous Hacker Glitch
     gsap.to(nameRef.current, {
       skewX: () => Math.random() * 10 - 5,
-      x: () => Math.random() * 6 - 3,
-      duration: 0.1,
+      x: () => Math.random() * 4 - 2,
+      opacity: () => Math.random() * 0.5 + 0.5,
+      duration: 0.05,
       repeat: -1,
       repeatRefresh: true,
+      ease: "steps(1)",
     });
 
+    // Terminal Logs Typing Effect
+    logRefs.current.forEach((log, index) => {
+      gsap.fromTo(
+        log,
+        { opacity: 0, x: -20 },
+        { opacity: 1, x: 0, duration: 0.3, delay: index * 0.3, ease: "power2.out" }
+      );
+    });
+
+    // Loading Counter & Bar
     const counter = { value: 0 };
     tl.to(
       counter,
       {
         value: 100,
-        duration: 1.2,
+        duration: 1.5,
         ease: "power2.inOut",
         onUpdate: () => {
           const v = Math.floor(counter.value);
@@ -63,126 +79,130 @@ const Loading = ({ onFinish }) => {
       "-=0.2"
     );
 
+    // Scanner Line
     gsap.to(scannerRef.current, {
       top: "100%",
-      duration: 2,
+      duration: 1.5,
       repeat: -1,
-      ease: "none",
+      ease: "linear",
     });
 
+    // Matrix Particles
     particlesRef.current.forEach((p) => {
       gsap.to(p, {
-        y: "-=100",
+        y: "100vh",
         opacity: 0,
-        duration: "random(2, 4)",
+        duration: "random(1, 3)",
         repeat: -1,
         delay: "random(0, 2)",
-        ease: "none",
+        ease: "linear",
       });
     });
 
+    // Outer Ring
     gsap.to(cubeRef.current, {
       rotateZ: 360,
-      duration: 8,
+      duration: 10,
       repeat: -1,
-      ease: "none",
+      ease: "linear",
     });
   }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#020202] text-white overflow-hidden font-mono select-none"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#050505] text-[#10b981] overflow-hidden font-mono select-none"
     >
-      {/* Scanner Line */}
+      {/* Hacker Scanner Line */}
       <div
         ref={scannerRef}
-        className="absolute top-[-10%] left-0 w-full h-[20vh] bg-gradient-to-b from-transparent via-indigo-500/10 to-transparent z-0 pointer-events-none"
+        className="absolute top-[-10%] left-0 w-full h-[15vh] bg-gradient-to-b from-transparent via-[#10b981]/20 to-transparent z-0 pointer-events-none mix-blend-screen"
       />
 
-      {/* Particles */}
-      <div className="absolute inset-0 z-0">
-        {[...Array(20)].map((_, i) => (
+      {/* Raining Particles */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        {[...Array(30)].map((_, i) => (
           <div
             key={i}
             ref={(el) => (particlesRef.current[i] = el)}
-            className="absolute w-1 h-1 bg-indigo-500/30 rounded-full"
+            className="absolute w-[2px] h-[10px] bg-[#10b981]/40 shadow-[0_0_5px_#10b981]"
             style={{
               left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              top: `-${Math.random() * 20}%`,
             }}
           />
         ))}
       </div>
 
-      {/* Ring */}
+      {/* Cybernetic Ring */}
       <div
         ref={cubeRef}
-        className="absolute w-[500px] h-[500px] border border-indigo-500/5 rounded-full z-0"
+        className="absolute w-[600px] h-[600px] border border-[#10b981]/10 rounded-full z-0 border-dashed"
         style={{ perspective: "1000px" }}
       >
-        <div className="absolute inset-0 border-t-2 border-indigo-500/20 rounded-full animate-spin-slow" />
+        <div className="absolute inset-0 border-t-4 border-[#10b981]/30 rounded-full" />
+        <div className="absolute inset-8 border-b-2 border-[#10b981]/20 rounded-full animate-pulse" />
       </div>
 
-      {/* Center */}
+      {/* Center Display */}
       <div className="relative z-10 flex flex-col items-center">
         <h1
           ref={nameRef}
-          className="text-7xl md:text-[10rem] font-black italic tracking-tighter leading-none mb-2 bg-clip-text text-transparent bg-gradient-to-b from-white via-indigo-300 to-indigo-700"
-          style={{ filter: "drop-shadow(0 0 30px rgba(79,70,229,0.4))" }}
+          className="text-6xl md:text-[8rem] font-black tracking-tighter leading-none mb-2 text-[#10b981]"
         >
           SHIHAB
         </h1>
 
-        {/* NEW – Premium micro tagline */}
-        <p className="text-[11px] tracking-[0.4em] uppercase text-indigo-300/70 mb-2">
-          Full-Stack Systems Engineer
+        <p className="text-[12px] tracking-[0.5em] uppercase text-[#10b981]/80 mb-2 font-bold">
+          Full-Stack Web Developer
         </p>
 
-        <p className="text-[10px] tracking-[1em] uppercase text-indigo-400/60 mb-16">
-          Architecting Logic
+        <p className="text-[10px] tracking-[0.8em] uppercase text-[#10b981]/50 mb-16 animate-pulse">
+          _System.Override()
         </p>
 
-        {/* Loading Bar */}
-        <div className="w-72 md:w-[30rem]">
+        {/* Cyber Progress Bar */}
+        <div className="w-80 md:w-[35rem]">
           <div className="flex justify-between items-end mb-3 font-bold">
-            <span className="text-[9px] text-indigo-500 tracking-widest">
-              SYSTEM_BOOT
+            <span className="text-[10px] text-[#10b981]/80 tracking-widest animate-pulse">
+              EXECUTING_PAYLOAD...
             </span>
-            <span className="text-4xl italic">
+            <span className="text-4xl text-[#10b981]">
               <span ref={percentTextRef}>0</span>%
             </span>
           </div>
 
-          <div className="h-[2px] w-full bg-white/5 relative overflow-hidden">
+          <div className="h-[3px] w-full bg-[#10b981]/10 relative overflow-hidden">
             <div
               ref={progressBarRef}
-              className="h-full w-full origin-left bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,1)]"
+              className="h-full w-full origin-left bg-[#10b981] shadow-[0_0_20px_#10b981]"
+              style={{ transform: 'scaleX(0)' }}
             />
           </div>
 
-          {/* NEW – Status text */}
-          <p className="mt-3 text-[9px] tracking-widest uppercase text-indigo-400/50 text-right">
-            Initializing Secure Runtime Environment
+          <p className="mt-3 text-[9px] tracking-widest uppercase text-[#10b981]/50 text-right">
+            Decrypting Core Assets...
           </p>
         </div>
       </div>
 
-      {/* Bottom HUD */}
+      {/* Bottom Terminal HUD */}
       <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end">
-        <div className="flex flex-col gap-1 text-[8px] text-indigo-400/40 uppercase">
+        <div className="flex flex-col gap-1 text-[10px] text-[#10b981]/60 font-bold">
           {systemLogs.map((log, i) => (
-            <div key={i}>{log}</div>
+            <div key={i} ref={(el) => (logRefs.current[i] = el)} className="opacity-0">
+              {log}
+            </div>
           ))}
         </div>
 
-        {/* NEW – Signature */}
+        {/* Signature */}
         <div className="text-right">
-          <div className="text-[9px] text-indigo-500/50 animate-pulse font-bold">
-            v3.0.4_STABLE
+          <div className="text-[10px] text-[#10b981] animate-pulse font-bold bg-[#10b981]/10 px-2 py-1 rounded">
+            SYS_ADMIN_ACTIVE
           </div>
-          <div className="text-[8px] tracking-widest uppercase text-indigo-400/30">
-            Crafted by Shihab
+          <div className="text-[9px] tracking-widest uppercase text-[#10b981]/40 mt-1">
+            Terminal_v3.0.4
           </div>
         </div>
       </div>
