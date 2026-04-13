@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from "react";
+import React, { useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -16,16 +16,26 @@ const codeSnippets = [
   "console.log('Backend connected...');",
 ];
 
+// প্রতি রেন্ডারে নতুন অ্যারে তৈরি এড়াতে এটি বাইরে রাখা হলো
+const duplicatedSnippets = [...codeSnippets, ...codeSnippets];
+
 const About = () => {
   const sectionRef = useRef(null);
   const imageRef = useRef(null);
   const statsRef = useRef(null);
+  const videoRef = useRef(null); // ভিডিও কন্ট্রোল করার জন্য নতুন Ref
 
-  const [stats, setStats] = useState({
-    experience: 0,
-    customers: 0,
-    projects: 0,
-  });
+  // অ্যানিমেশনের সময় রি-রেন্ডার এড়াতে State-এর বদলে Refs ব্যবহার করা হলো
+  const expRef = useRef(null);
+  const custRef = useRef(null);
+  const projRef = useRef(null);
+
+  // ভিডিও ৭.৫০ সেকেন্ডে থামানোর লজিক
+  const handleTimeUpdate = () => {
+    if (videoRef.current && videoRef.current.currentTime >= 7.00) {
+      videoRef.current.pause();
+    }
+  };
 
   useGSAP(
     () => {
@@ -66,7 +76,7 @@ const About = () => {
           ease: "power3.out",
         }, "-=0.8");
 
-      // 3. Stats Counter - Optimized with Snappy Ease
+      // 3. Stats Counter - Optimized with Snappy Ease and Direct DOM manipulation
       ScrollTrigger.create({
         trigger: statsRef.current,
         start: "top 90%",
@@ -79,11 +89,10 @@ const About = () => {
             duration: 2.5,
             ease: "power4.out",
             onUpdate: () => {
-              setStats({
-                experience: values.exp,
-                customers: Math.floor(values.cust),
-                projects: Math.floor(values.proj),
-              });
+              // রি-রেন্ডার ছাড়া সরাসরি DOM আপডেট
+              if (expRef.current) expRef.current.innerText = values.exp.toFixed(1) + "+";
+              if (custRef.current) custRef.current.innerText = Math.floor(values.cust) + "+";
+              if (projRef.current) projRef.current.innerText = Math.floor(values.proj) + "+";
             },
           });
         },
@@ -91,12 +100,6 @@ const About = () => {
     },
     { scope: sectionRef }
   );
-
-  const statCards = [
-    { value: `${stats.experience.toFixed(1)}+`, label: "Years Exp", color: "text-sky-400" },
-    { value: `${stats.customers}+`, label: "Global Clients", color: "text-emerald-400" },
-    { value: `${stats.projects}+`, label: "Successful Projects", color: "text-purple-400" },
-  ];
 
   return (
     <section
@@ -108,13 +111,13 @@ const About = () => {
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.05]">
         <div className="absolute inset-0 flex justify-between px-10">
           <div className="stream-up-about flex flex-col gap-10 font-mono text-[10px] text-sky-500 will-change-transform">
-            {[...codeSnippets, ...codeSnippets].map((s, i) => (
-              <span key={i} className="whitespace-nowrap">{s}</span>
+            {duplicatedSnippets.map((s, i) => (
+              <span key={`up-${i}`} className="whitespace-nowrap">{s}</span>
             ))}
           </div>
           <div className="stream-down-about flex flex-col gap-10 font-mono text-[10px] text-emerald-500 text-right will-change-transform">
-            {[...codeSnippets, ...codeSnippets].map((s, i) => (
-              <span key={i} className="whitespace-nowrap">{s}</span>
+            {duplicatedSnippets.map((s, i) => (
+              <span key={`down-${i}`} className="whitespace-nowrap">{s}</span>
             ))}
           </div>
         </div>
@@ -123,19 +126,23 @@ const About = () => {
       <div className="relative z-10 container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-center">
           
-          {/* IMAGE BLOCK */}
+          {/* VIDEO BLOCK (Replaced Image) */}
           <div ref={imageRef} className="relative group">
             <div className="absolute -inset-4 bg-gradient-to-tr from-sky-500/20 to-purple-500/20 blur-[80px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity" />
             
             <div className="relative p-3 rounded-[3rem] bg-white/[0.02] border border-white/10 backdrop-blur-3xl shadow-2xl overflow-hidden">
-              <img
-                src="gg.png"
-                alt="Shihab"
-                className="w-full aspect-[4/5] object-cover rounded-[2.5rem] grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000 scale-[1.01] group-hover:scale-105"
+              <video
+                ref={videoRef}
+                src="https://res.cloudinary.com/didqmq9xz/video/upload/v1776114678/video_evbxpo.mp4"
+                autoPlay
+                muted
+                playsInline
+                onTimeUpdate={handleTimeUpdate}
+                className="w-full aspect-[6/4] object-cover rounded-[2.5rem] grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000 scale-[1.01] group-hover:scale-105 pointer-events-none"
               />
               
               {/* Overlay Badge */}
-              <div className="absolute bottom-10 right-10 bg-black/60 border border-white/10 p-6 rounded-[2rem] backdrop-blur-2xl shadow-2xl transform group-hover:-translate-y-2 transition-transform">
+              <div className="absolute bottom-10 right-10 bg-black/60 border border-white/10 p-6 rounded-[2rem] backdrop-blur-2xl shadow-2xl transform group-hover:-translate-y-2 transition-transform pointer-events-none">
                 <p className="text-emerald-400 font-black text-4xl tracking-tighter">100%</p>
                 <p className="text-gray-400 text-[10px] uppercase tracking-widest font-bold">Job Success</p>
               </div>
@@ -184,17 +191,40 @@ const About = () => {
 
         {/* STATS SECTION */}
         <div ref={statsRef} className="mt-32 grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {statCards.map((s, i) => (
-            <div key={i} className="relative p-10 rounded-[2.5rem] bg-white/[0.01] border border-white/5 backdrop-blur-md text-center group hover:bg-white/[0.03] transition-all duration-500">
-              <h3 className={`text-6xl md:text-7xl font-black mb-3 tracking-tighter ${s.color}`}>
-                {s.value}
-              </h3>
-              <p className="text-gray-500 font-mono text-[9px] uppercase tracking-[0.4em] font-bold group-hover:text-gray-300 transition-colors">
-                {s.label}
-              </p>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-sky-500 to-transparent group-hover:w-1/2 transition-all duration-700" />
-            </div>
-          ))}
+          
+          {/* Experience Card */}
+          <div className="relative p-10 rounded-[2.5rem] bg-white/[0.01] border border-white/5 backdrop-blur-md text-center group hover:bg-white/[0.03] transition-all duration-500">
+            <h3 ref={expRef} className="text-6xl md:text-7xl font-black mb-3 tracking-tighter text-sky-400">
+              0.0+
+            </h3>
+            <p className="text-gray-500 font-mono text-[9px] uppercase tracking-[0.4em] font-bold group-hover:text-gray-300 transition-colors">
+              Years Exp
+            </p>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-sky-500 to-transparent group-hover:w-1/2 transition-all duration-700" />
+          </div>
+
+          {/* Customers Card */}
+          <div className="relative p-10 rounded-[2.5rem] bg-white/[0.01] border border-white/5 backdrop-blur-md text-center group hover:bg-white/[0.03] transition-all duration-500">
+            <h3 ref={custRef} className="text-6xl md:text-7xl font-black mb-3 tracking-tighter text-emerald-400">
+              0+
+            </h3>
+            <p className="text-gray-500 font-mono text-[9px] uppercase tracking-[0.4em] font-bold group-hover:text-gray-300 transition-colors">
+              Global Clients
+            </p>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-sky-500 to-transparent group-hover:w-1/2 transition-all duration-700" />
+          </div>
+
+          {/* Projects Card */}
+          <div className="relative p-10 rounded-[2.5rem] bg-white/[0.01] border border-white/5 backdrop-blur-md text-center group hover:bg-white/[0.03] transition-all duration-500">
+            <h3 ref={projRef} className="text-6xl md:text-7xl font-black mb-3 tracking-tighter text-purple-400">
+              0+
+            </h3>
+            <p className="text-gray-500 font-mono text-[9px] uppercase tracking-[0.4em] font-bold group-hover:text-gray-300 transition-colors">
+              Successful Projects
+            </p>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-sky-500 to-transparent group-hover:w-1/2 transition-all duration-700" />
+          </div>
+
         </div>
       </div>
     </section>
