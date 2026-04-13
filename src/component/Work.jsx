@@ -3,12 +3,10 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import {
-  FaCode,
   FaGithub,
   FaTerminal,
   FaLayerGroup,
   FaArrowRight,
-  FaBolt,
 } from "react-icons/fa";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -71,7 +69,8 @@ const projects = [
 const Work = () => {
   const containerRef = useRef(null);
 
-  useGSAP(
+  // useGSAP থেকে contextSafe এক্সট্র্যাক্ট করা হলো ইভেন্ট হ্যান্ডলার অপটিমাইজেশনের জন্য
+  const { contextSafe } = useGSAP(
     () => {
       // Optimized Header Animation with Stagger
       gsap.from(".work-header-content > *", {
@@ -82,30 +81,30 @@ const Work = () => {
         },
         opacity: 0,
         y: 50,
-        stagger: 0.1, // Staggering creates a wave effect
+        stagger: 0.1,
         duration: 1.2,
         ease: "power4.out",
       });
 
       // Optimized Card Reveal - Aggressive Pop-up
-      gsap.utils.toArray(".project-card").forEach((card, i) => {
+      gsap.utils.toArray(".project-card").forEach((card) => {
         gsap.from(card, {
           scrollTrigger: {
             trigger: card,
-            start: "top 95%", // Triggers slightly earlier for smoothness
+            start: "top 95%",
             toggleActions: "play none none reverse",
           },
           y: 100,
-          scale: 0.9, // Adds depth pop
+          scale: 0.9,
           opacity: 0,
           duration: 1.2,
-          ease: "expo.out", // Snappier easing
-          force3D: true, // Hardware acceleration
-          clearProps: "scale", // Cleanup to prevent blurry text
+          ease: "expo.out",
+          force3D: true,
+          clearProps: "scale",
         });
       });
 
-      // Ambient Background Motion (Reduced calculation load)
+      // Ambient Background Motion
       gsap.to(".bg-glow-work", {
         x: "20vw",
         y: "10vh",
@@ -119,38 +118,38 @@ const Work = () => {
     { scope: containerRef }
   );
 
-  // Performance Optimized Hover Handlers
-  const handleEnter = ({ currentTarget }) => {
-    // Aggressive Lift
+  // contextSafe এর মাধ্যমে মেমরি লিক রোধ এবং পারফরম্যান্স অপটিমাইজেশন
+  const handleEnter = contextSafe(({ currentTarget }) => {
+    // gsap.utils.selector ব্যবহার করা হলো নির্দিষ্ট কার্ডের ভেতরের এলিমেন্ট খোঁজার জন্য
+    const q = gsap.utils.selector(currentTarget);
+
     gsap.to(currentTarget, {
       y: -15,
       scale: 1.02,
       borderColor: "rgba(16,185,129,0.5)",
       boxShadow: "0 25px 50px -12px rgba(16,185,129,0.15)",
       duration: 0.4,
-      ease: "back.out(1.7)", // Aggressive bounce effect
-      overwrite: "auto", // Prevents conflict
+      ease: "back.out(1.7)",
+      overwrite: "auto",
       force3D: true,
     });
 
-    // Image Zoom
-    gsap.to(currentTarget.querySelector(".project-img"), {
+    gsap.to(q(".project-img"), {
       scale: 1.15,
       rotate: -2,
       duration: 0.8,
       ease: "expo.out",
       overwrite: "auto",
+      force3D: true, // ইমেজের স্মুথ ট্রান্সফর্মের জন্য
     });
 
-    // Inner Glow
-    gsap.to(currentTarget.querySelector(".card-inner-glow"), {
+    gsap.to(q(".card-inner-glow"), {
       opacity: 0.6,
       duration: 0.4,
       overwrite: "auto",
     });
 
-    // Button Activation
-    gsap.to(currentTarget.querySelector(".gsap-btn"), {
+    gsap.to(q(".gsap-btn"), {
       backgroundColor: "#10b981",
       color: "#fff",
       scale: 1.05,
@@ -158,10 +157,11 @@ const Work = () => {
       ease: "power2.out",
       overwrite: "auto",
     });
-  };
+  });
 
-  const handleLeave = ({ currentTarget }) => {
-    // Reset to Neutral
+  const handleLeave = contextSafe(({ currentTarget }) => {
+    const q = gsap.utils.selector(currentTarget);
+
     gsap.to(currentTarget, {
       y: 0,
       scale: 1,
@@ -173,31 +173,29 @@ const Work = () => {
       force3D: true,
     });
 
-    // Image Reset
-    gsap.to(currentTarget.querySelector(".project-img"), {
+    gsap.to(q(".project-img"), {
       scale: 1,
       rotate: 0,
       duration: 1,
       ease: "power3.out",
       overwrite: "auto",
+      force3D: true,
     });
 
-    // Glow Reset
-    gsap.to(currentTarget.querySelector(".card-inner-glow"), {
+    gsap.to(q(".card-inner-glow"), {
       opacity: 0,
       duration: 0.5,
       overwrite: "auto",
     });
 
-    // Button Reset
-    gsap.to(currentTarget.querySelector(".gsap-btn"), {
+    gsap.to(q(".gsap-btn"), {
       backgroundColor: "#fff",
       color: "#000",
       scale: 1,
       duration: 0.3,
       overwrite: "auto",
     });
-  };
+  });
 
   return (
     <section
@@ -206,7 +204,6 @@ const Work = () => {
       className="relative overflow-hidden bg-[#010103] py-40 text-white will-change-transform"
       style={{ perspective: "2000px" }}
     >
-      {/* Background Glow - Optimized Filter */}
       <div className="bg-glow-work pointer-events-none absolute left-0 top-0 -z-0 h-[600px] w-[600px] rounded-full bg-emerald-600/5 blur-[100px] will-change-transform" />
 
       <div className="container relative z-10 mx-auto px-6">
@@ -235,12 +232,10 @@ const Work = () => {
               onMouseLeave={handleLeave}
               style={{ transformStyle: "preserve-3d" }}
             >
-              {/* Optimized Inner Glow */}
               <div className="card-inner-glow pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent opacity-0 transition-opacity duration-700" />
 
               <div className="px-8 pt-8 md:px-10 md:pt-10">
                 <div className="relative overflow-hidden rounded-t-[2rem] border border-white/10 bg-[#020205] shadow-2xl">
-                  {/* Browser Header */}
                   <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.02] px-6 py-4 backdrop-blur-sm">
                     <div className="flex gap-2">
                       <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
@@ -248,12 +243,11 @@ const Work = () => {
                       <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
                     </div>
                     <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-500 opacity-70">
-                      {p.title.toLowerCase().split(' ')[0]}.shihab.dev
+                      {p.title.toLowerCase().split(" ")[0]}.shihab.dev
                     </span>
                     <div className="w-8" />
                   </div>
 
-                  {/* Image Container - Hardware Accelerated */}
                   <div className="relative h-72 overflow-hidden md:h-[380px]">
                     <img
                       src={p.image}
@@ -296,9 +290,8 @@ const Work = () => {
                 </div>
               </div>
 
-              {/* Floating Role Badge */}
               <div className="pointer-events-none absolute left-14 top-[6.5rem] z-20 md:top-[7.5rem]">
-                <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/70 px-4 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-emerald-400 backdrop-blur-xl shadow-lg">
+                <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/70 px-4 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-emerald-400 shadow-lg backdrop-blur-xl">
                   <FaLayerGroup /> {p.role}
                 </div>
               </div>
