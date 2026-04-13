@@ -191,7 +191,7 @@ const Hero = () => {
           >
             <div className="w-full h-full rounded-full bg-[#020205] overflow-hidden border-[6px] border-[#020205]">
               <img
-                src="this.jpeg"
+                src="https://res.cloudinary.com/didqmq9xz/image/upload/v1776117419/this_y41mdp.jpg"
                 alt="Shihab"
                 loading="lazy"
                 decoding="async"
