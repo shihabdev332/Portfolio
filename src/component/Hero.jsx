@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -19,17 +19,20 @@ const codeSnippets = [
   "export const dynamic = 'force-dynamic';",
 ];
 
+// পারফরম্যান্সের জন্য অ্যারেগুলো কম্পোনেন্টের বাইরে একবার তৈরি করা হলো
+const repeatedSnippets = [...codeSnippets, ...codeSnippets, ...codeSnippets];
+
 const Hero = () => {
   const containerRef = useRef(null);
   const ringRef = useRef(null);
   const profileOverlayRef = useRef(null);
+  
   const [currentText, setCurrentText] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [typing, setTyping] = useState(true);
-  const [cursorVisible, setCursorVisible] = useState(true);
 
   // --- GSAP PREMIUM ANIMATIONS ---
-  useGSAP(() => {
+  const { contextSafe } = useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
     // 1. Hero content entrance
@@ -84,24 +87,24 @@ const Hero = () => {
     });
   }, { scope: containerRef });
 
-  // Profile hover
-  const handleMouseEnter = () => {
+  // Profile hover (Optimized with GSAP contextSafe for React)
+  const handleMouseEnter = contextSafe(() => {
     gsap.to(profileOverlayRef.current, {
       opacity: 1,
       scale: 1,
       duration: 0.5,
       ease: "expo.out",
     });
-  };
+  });
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = contextSafe(() => {
     gsap.to(profileOverlayRef.current, {
       opacity: 0,
       scale: 0.85,
       duration: 0.4,
       ease: "power2.in",
     });
-  };
+  });
 
   // Typing logic
   useEffect(() => {
@@ -130,16 +133,11 @@ const Hero = () => {
     return () => clearTimeout(timeout);
   }, [displayText, typing, currentText]);
 
-  // Cursor blink
-  useEffect(() => {
-    const interval = setInterval(() => setCursorVisible((v) => !v), 530);
-    return () => clearInterval(interval);
-  }, []);
-
-  const scrollToSection = (id) => {
+  // Scroll handler optimized
+  const scrollToSection = useCallback((id) => {
     const section = document.getElementById(id);
     if (section) section.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   return (
     <section
@@ -161,13 +159,13 @@ const Hero = () => {
         {/* Code streams */}
         <div className="absolute inset-0 opacity-[0.06] flex justify-between px-10">
           <div className="stream-up font-['Fira_Code'] text-[10px] text-purple-500 space-y-20 py-10">
-            {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((s, i) => (
-              <span key={i} className="block tracking-widest">{s}</span>
+            {repeatedSnippets.map((s, i) => (
+              <span key={`up-${i}`} className="block tracking-widest">{s}</span>
             ))}
           </div>
           <div className="stream-down font-['Fira_Code'] text-[10px] text-sky-500 space-y-20 py-10 text-right">
-            {[...codeSnippets, ...codeSnippets, ...codeSnippets].map((s, i) => (
-              <span key={i} className="block tracking-widest">{s}</span>
+            {repeatedSnippets.map((s, i) => (
+              <span key={`down-${i}`} className="block tracking-widest">{s}</span>
             ))}
           </div>
         </div>
@@ -195,7 +193,9 @@ const Hero = () => {
               <img
                 src="this.jpeg"
                 alt="Shihab"
-                className="w-full h-full object-cover  scale-110 group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover scale-110 group-hover:scale-105 transition-transform duration-700"
               />
             </div>
 
@@ -221,8 +221,9 @@ const Hero = () => {
             >
               {displayText}
             </span>
-            <span className="text-white font-thin ml-2 animate-pulse">
-              {cursorVisible ? "|" : " "}
+            {/* CSS-based cursor animation instead of state re-renders */}
+            <span className="text-white font-thin ml-2 animate-css-blink">
+              |
             </span>
           </h1>
 
@@ -279,6 +280,13 @@ const Hero = () => {
         .animate-gradient-xy {
           background-size: 200% 200%;
           animation: gradient-xy 5s ease infinite;
+        }
+        @keyframes css-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .animate-css-blink {
+          animation: css-blink 1.06s step-end infinite;
         }
       `}</style>
     </section>
