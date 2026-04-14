@@ -57,7 +57,7 @@ const projects = [
     subtitle: "Real-time Data Visualization",
     description:
       "Advanced AI-driven admin panel featuring real-time predictive inventory analytics and automated business intelligence with RBAC security.",
-    image: "/admin.png",
+    image: "/admin1.png",
     link: "https://admin-panel-zeta-two-83.vercel.app",
     code: "https://github.com/shihabdev332/Admin_Panel",
     tech: ["React Query", "Chart.js", "Express", "Mongoose"],
